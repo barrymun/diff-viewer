@@ -1,5 +1,5 @@
 import type { Hunk } from "diff";
-import type { PendingLine } from "./types";
+import type { LineType } from "./types";
 
 export function generateHunkHeader(hunk: Hunk) {
   return `@@ -${hunk.oldStart},${hunk.oldLines} +${hunk.newStart},${hunk.newLines} @@`;
@@ -9,10 +9,10 @@ export function getAlignedLinesWithNumbers(hunk: Hunk) {
   const { lines, oldStart, newStart } = hunk;
 
   const result: {
-    oldLineType: PendingLine["lineType"];
+    oldLineType: LineType["diffLineType"];
     oldLineNumber?: number;
     oldLine?: string | null;
-    newLineType: PendingLine["lineType"];
+    newLineType: LineType["diffLineType"];
     newLineNumber?: number;
     newLine?: string | null;
   }[] = [];
@@ -21,8 +21,8 @@ export function getAlignedLinesWithNumbers(hunk: Hunk) {
   let oldLine = oldStart;
   let newLine = newStart;
 
-  const pendingRemovals: PendingLine[] = [];
-  const pendingAdditions: PendingLine[] = [];
+  const pendingRemovals: LineType[] = [];
+  const pendingAdditions: LineType[] = [];
 
   while (i < lines.length) {
     const line = lines[i];
@@ -46,9 +46,9 @@ export function getAlignedLinesWithNumbers(hunk: Hunk) {
 
       while (i < lines.length && (lines[i].startsWith('-') || lines[i].startsWith('+'))) {
         if (lines[i].startsWith('-')) {
-          pendingRemovals.push({ lineType: "-", line: lines[i].replace("-", " "), lineNumber: oldLine++ });
+          pendingRemovals.push({ diffLineType: "-", line: lines[i].replace("-", " "), lineNumber: oldLine++ });
         } else {
-          pendingAdditions.push({ lineType: "+", line: lines[i].replace("+", " "), lineNumber: newLine++ });
+          pendingAdditions.push({ diffLineType: "+", line: lines[i].replace("+", " "), lineNumber: newLine++ });
         }
         i++;
       }
@@ -56,10 +56,10 @@ export function getAlignedLinesWithNumbers(hunk: Hunk) {
       const maxLen = Math.max(pendingRemovals.length, pendingAdditions.length);
       for (let j = 0; j < maxLen; j++) {
         result.push({
-          oldLineType: pendingRemovals[j]?.lineType,
+          oldLineType: pendingRemovals[j]?.diffLineType,
           oldLineNumber: pendingRemovals[j]?.lineNumber,
           oldLine: pendingRemovals[j]?.line ?? null,
-          newLineType: pendingAdditions[j]?.lineType,
+          newLineType: pendingAdditions[j]?.diffLineType,
           newLineNumber: pendingAdditions[j]?.lineNumber,
           newLine: pendingAdditions[j]?.line ?? null,
         });
