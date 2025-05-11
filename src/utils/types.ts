@@ -1,4 +1,5 @@
-export type LinePair = {
-  leftLine?: string | null;
-  rightLine?: string | null;
+export interface PendingLine {
+  lineType: "+" | "-" | null;
+  line: string;
+  lineNumber: number;
 };

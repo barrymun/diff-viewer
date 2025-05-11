@@ -1,9 +1,18 @@
-import type { LinePair } from "./types";
+import type { Hunk } from "diff";
+import type { PendingLine } from "./types";
 
-export function getAlignedLinesWithNumbers(lines: string[], oldStart: number, newStart: number) {
+export function generateHunkHeader(hunk: Hunk) {
+  return `@@ -${hunk.oldStart},${hunk.oldLines} +${hunk.newStart},${hunk.newLines} @@`;
+}
+
+export function getAlignedLinesWithNumbers(hunk: Hunk) {
+  const { lines, oldStart, newStart } = hunk;
+
   const result: {
+    oldLineType: PendingLine["lineType"];
     oldLineNumber?: number;
     oldLine?: string | null;
+    newLineType: PendingLine["lineType"];
     newLineNumber?: number;
     newLine?: string | null;
   }[] = [];
@@ -12,16 +21,18 @@ export function getAlignedLinesWithNumbers(lines: string[], oldStart: number, ne
   let oldLine = oldStart;
   let newLine = newStart;
 
-  const pendingRemovals: { line: string; lineNumber: number }[] = [];
-  const pendingAdditions: { line: string; lineNumber: number }[] = [];
+  const pendingRemovals: PendingLine[] = [];
+  const pendingAdditions: PendingLine[] = [];
 
   while (i < lines.length) {
     const line = lines[i];
 
     if (line.startsWith(' ')) {
       result.push({
+        oldLineType: null,
         oldLineNumber: oldLine,
         oldLine: line,
+        newLineType: null,
         newLineNumber: newLine,
         newLine: line,
       });
@@ -35,9 +46,9 @@ export function getAlignedLinesWithNumbers(lines: string[], oldStart: number, ne
 
       while (i < lines.length && (lines[i].startsWith('-') || lines[i].startsWith('+'))) {
         if (lines[i].startsWith('-')) {
-          pendingRemovals.push({ line: lines[i], lineNumber: oldLine++ });
+          pendingRemovals.push({ lineType: "-", line: lines[i].replace("-", " "), lineNumber: oldLine++ });
         } else {
-          pendingAdditions.push({ line: lines[i], lineNumber: newLine++ });
+          pendingAdditions.push({ lineType: "+", line: lines[i].replace("+", " "), lineNumber: newLine++ });
         }
         i++;
       }
@@ -45,8 +56,10 @@ export function getAlignedLinesWithNumbers(lines: string[], oldStart: number, ne
       const maxLen = Math.max(pendingRemovals.length, pendingAdditions.length);
       for (let j = 0; j < maxLen; j++) {
         result.push({
+          oldLineType: pendingRemovals[j]?.lineType,
           oldLineNumber: pendingRemovals[j]?.lineNumber,
           oldLine: pendingRemovals[j]?.line ?? null,
+          newLineType: pendingAdditions[j]?.lineType,
           newLineNumber: pendingAdditions[j]?.lineNumber,
           newLine: pendingAdditions[j]?.line ?? null,
         });
@@ -55,13 +68,4 @@ export function getAlignedLinesWithNumbers(lines: string[], oldStart: number, ne
   }
 
   return result;
-}
-
-
-export function normalizeLinePairs(pairs: LinePair[]): LinePair[] {
-  // Just ensure left/right are same length in terms of non-null lines
-  return pairs.map(p => ({
-    leftLine: p.leftLine ?? null,
-    rightLine: p.rightLine ?? null,
-  }));
 }
