@@ -1,19 +1,21 @@
-// PatchViewer.tsx
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { Box, Button, Typography, useTheme } from '@mui/material';
 import React, { useState } from 'react';
 import { parsePatch, type ParsedDiff } from 'diff';
 
-// type LineInfo = {
-//   type: 'added' | 'removed' | 'context';
-//   value: string;
-// };
+import VisuallyHiddenInput from '../styled/visuallyHiddenInput';
+import { getAlignedLinesWithNumbers } from '../../utils/helpers';
 
 export function PatchViewer() {
+  const { spacing } = useTheme();
+
   const [parsed, setParsed] = useState<ParsedDiff[] | null>(null);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    console.log(file);
-    if (!file) return;
+    if (!file) {
+      return;
+    }
 
     const content = await file.text();
     const parsedPatch = parsePatch(content);
@@ -21,37 +23,86 @@ export function PatchViewer() {
   };
 
   return (
-    <div>
-      <h2>Safe Patch Viewer (Side-by-Side)</h2>
-      <input type="file" accept=".diff,.patch,.txt" onChange={handleFileUpload} />
+    <Box>
+      <Typography variant="h4">Patch Viewer (Side-by-Side)</Typography>
+      
+      <Button
+        component="label"
+        role={undefined}
+        variant="contained"
+        tabIndex={-1}
+        startIcon={<CloudUploadIcon />}
+      >
+        Upload files
+        <VisuallyHiddenInput
+          type="file"
+          onChange={handleFileUpload}
+          multiple
+        />
+      </Button>
 
       {parsed?.map((file, i) => (
-        <div key={i} style={{ marginTop: 24 }}>
-          <h3>{file.oldFileName} → {file.newFileName}</h3>
-          {file.hunks.map((hunk, j) => (
-            <div key={j} style={{ display: 'flex', fontFamily: 'monospace', fontSize: '14px' }}>
-              <div style={{ flex: 1, padding: 4, backgroundColor: '#f0f0f0' }}>
-                {hunk.lines.map((line, idx) =>
-                  line.startsWith('-') || line.startsWith(' ') ? (
-                    <div key={idx} style={{ backgroundColor: line.startsWith('-') ? '#ffecec' : undefined }}>
-                      {line}
-                    </div>
-                  ) : null
-                )}
-              </div>
-              <div style={{ flex: 1, padding: 4, backgroundColor: '#f0f0f0' }}>
-                {hunk.lines.map((line, idx) =>
-                  line.startsWith('+') || line.startsWith(' ') ? (
-                    <div key={idx} style={{ backgroundColor: line.startsWith('+') ? '#eaffea' : undefined }}>
-                      {line}
-                    </div>
-                  ) : null
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
+        <Box key={i} sx={{ marginTop: spacing(3) }}>
+          <Typography variant="h6">{file.oldFileName} → {file.newFileName}</Typography>
+
+          {file.hunks.map((hunk, j) => {
+            const aligned = getAlignedLinesWithNumbers(hunk.lines, hunk.oldStart, hunk.newStart);
+
+            return (
+              <Box key={j} sx={{ display: "flex", gap: spacing(2) }}>
+                {/* Left side */}
+                <Box sx={{ width: "50%", overflowX: "scroll", padding: spacing(2), bgcolor: "grey.50" }}>
+                  {aligned.map((line, idx) => (
+                    <Box
+                      key={idx}
+                      sx={{
+                        display: "flex",
+                        ...(!line.oldLine && { bgcolor: "grey.200" }),
+                        ...(line.oldLine?.startsWith('-') && { bgcolor: "#ffecec" }),
+                      }}
+                    >
+                      <Typography
+                        variant="body2"
+                        sx={{ width: 40, textAlign: "right", pr: 2, color: "grey.600" }}
+                      >
+                        {line.oldLineNumber ?? ''}
+                      </Typography>
+                      <Typography variant="body1" sx={{ whiteSpace: "pre" }}>
+                        {line.oldLine ?? ' '}
+                      </Typography>
+                    </Box>
+                  ))}
+                </Box>
+
+                {/* Right side */}
+                <Box sx={{ width: "50%", overflowX: "scroll", padding: spacing(2), bgcolor: "grey.50" }}>
+                  {aligned.map((line, idx) => (
+                    <Box
+                      key={idx}
+                      sx={{
+                        display: "flex",
+                        ...(!line.newLine && { bgcolor: "grey.200" }),
+                        ...(line.newLine?.startsWith('+') && { bgcolor: "#eaffea" }),
+                      }}
+                    >
+                      <Typography
+                        variant="body2"
+                        sx={{ width: 40, textAlign: "right", pr: 2, color: "grey.600" }}
+                      >
+                        {line.newLineNumber ?? ''}
+                      </Typography>
+                      <Typography variant="body1" sx={{ whiteSpace: "pre" }}>
+                        {line.newLine ?? ' '}
+                      </Typography>
+                    </Box>
+                  ))}
+                </Box>
+              </Box>
+            );
+          })}
+
+        </Box>
       ))}
-    </div>
+    </Box>
   );
 };
