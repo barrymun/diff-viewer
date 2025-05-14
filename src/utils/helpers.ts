@@ -1,4 +1,4 @@
-import type { Hunk } from "diff";
+import { diffWordsWithSpace, type Hunk } from "diff";
 import type { LineType } from "./types";
 
 export function generateHunkHeader(hunk: Hunk) {
@@ -55,13 +55,41 @@ export function getAlignedLinesWithNumbers(hunk: Hunk) {
 
       const maxLen = Math.max(pendingRemovals.length, pendingAdditions.length);
       for (let j = 0; j < maxLen; j++) {
+        const removal = pendingRemovals[j];
+        const addition = pendingAdditions[j];
+      
+        const oldLineContent = removal?.line ?? null;
+        const newLineContent = addition?.line ?? null;
+      
+        let oldLineHtml = oldLineContent;
+        let newLineHtml = newLineContent;
+      
+        // If both sides exist, diff them
+        if (removal?.line && addition?.line) {
+          const changes = diffWordsWithSpace(removal.line, addition.line);
+      
+          oldLineHtml = '';
+          newLineHtml = '';
+      
+          for (const part of changes) {
+            if (part.added) {
+              newLineHtml += `<span style="background-color: #a6f3a6;">${part.value}</span>`;
+            } else if (part.removed) {
+              oldLineHtml += `<span style="background-color: #f7a6a6;">${part.value}</span>`;
+            } else {
+              oldLineHtml += part.value;
+              newLineHtml += part.value;
+            }
+          }
+        }
+      
         result.push({
-          oldLineType: pendingRemovals[j]?.diffLineType,
-          oldLineNumber: pendingRemovals[j]?.lineNumber,
-          oldLine: pendingRemovals[j]?.line ?? null,
-          newLineType: pendingAdditions[j]?.diffLineType,
-          newLineNumber: pendingAdditions[j]?.lineNumber,
-          newLine: pendingAdditions[j]?.line ?? null,
+          oldLineType: removal?.diffLineType,
+          oldLineNumber: removal?.lineNumber,
+          oldLine: oldLineHtml,
+          newLineType: addition?.diffLineType,
+          newLineNumber: addition?.lineNumber,
+          newLine: newLineHtml,
         });
       }
     }

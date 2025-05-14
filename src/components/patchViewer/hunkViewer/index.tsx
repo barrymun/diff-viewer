@@ -1,4 +1,4 @@
-import { TableRow, Typography } from "@mui/material";
+import { Box, TableRow, Typography } from "@mui/material";
 import type { Hunk } from "diff";
 
 import { getAlignedLinesWithNumbers } from "../../../utils/helpers";
@@ -32,9 +32,13 @@ export default function HunkViewer({ hunk, lineVersion }: HunkViewerProps) {
         </Typography>
       </MinimalTableCell>
       <MinimalTableCell>
-        <Typography variant="body1" sx={{ whiteSpace: "pre" }}>
-          {line[`${lineVersion}Line`] ?? ' '}
-        </Typography>
+        <Box sx={{ minWidth: "max-content" }}>
+          <Typography
+            variant="body1"
+            sx={{ whiteSpace: "pre-wrap" }}
+            dangerouslySetInnerHTML={{ __html: line[`${lineVersion}Line`] ?? ' ' }}
+          />
+        </Box>
       </MinimalTableCell>
     </TableRow>
   ))
