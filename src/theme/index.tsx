@@ -1,4 +1,5 @@
 import { createTheme, responsiveFontSizes } from '@mui/material/styles';
+import { customBlue, customGreen, customRed, customYellow } from './customColors';
 
 // https://mui.com/material-ui/customization/typography/
 let theme = createTheme({
@@ -16,6 +17,12 @@ let theme = createTheme({
       '"Segoe UI Emoji"',
       '"Segoe UI Symbol"',
     ].join(","),
+  },
+  palette: {
+    green: customGreen,
+    red: customRed,
+    blue: customBlue,
+    yellow: customYellow,
   },
 });
 

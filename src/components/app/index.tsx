@@ -1,9 +1,9 @@
-import { PatchViewer } from '../patchViewer'
+import { DiffViewer } from '../diffViewer'
 
 function App() {
   return (
     <>
-      <PatchViewer />
+      <DiffViewer />
     </>
   )
 }
