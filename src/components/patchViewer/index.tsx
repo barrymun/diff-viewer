@@ -48,30 +48,32 @@ export function PatchViewer() {
         <Box key={i} sx={{ marginTop: spacing(3) }}>
           <Typography variant="h6">{file.oldFileName} → {file.newFileName}</Typography>
 
-          <Box sx={{ display: "flex", flexDirection: "column", gap: spacing(2) }}>
-          
-            {file.hunks.map((hunk, hunkIndex) => (
-              <Box>
-                <HunkHeader>{generateHunkHeader(hunk)}</HunkHeader>
-                <Box key={hunkIndex} sx={{ display: "flex", gap: spacing(2) }}>
-                  <Box sx={{ width: "50%", overflowX: "scroll" }}>
-                    <Table>
-                      <TableBody>
-                        <HunkViewer hunk={hunk} lineVersion="old" />
-                      </TableBody>
-                    </Table>
-                  </Box>
+          <Box sx={{ display: "flex", gap: spacing(2) }}>
+            <Box sx={{ width: "50%", overflowX: "scroll" }}>
+              <Table>
+                <TableBody>
+                  {file.hunks.map((hunk, hunkIndex) => (
+                    <React.Fragment key={hunkIndex}>
+                      <HunkHeader>{generateHunkHeader(hunk)}</HunkHeader>
+                      <HunkViewer hunk={hunk} lineVersion="old" />
+                    </React.Fragment>
+                  ))}
+                </TableBody>
+              </Table>
+            </Box>
 
-                  <Box sx={{ width: "50%", overflowX: "scroll" }}>
-                    <Table>
-                      <TableBody>
-                        <HunkViewer hunk={hunk} lineVersion="new" />
-                      </TableBody>
-                    </Table>
-                  </Box>
-                </Box>
-              </Box>
-            ))}
+            <Box sx={{ width: "50%", overflowX: "scroll" }}>
+              <Table>
+                <TableBody>
+                  {file.hunks.map((hunk, hunkIndex) => (
+                    <React.Fragment key={hunkIndex}>
+                      <HunkHeader />
+                      <HunkViewer hunk={hunk} lineVersion="new" />
+                    </React.Fragment>
+                  ))}
+                </TableBody>
+              </Table>
+            </Box>
           </Box>
 
         </Box>
