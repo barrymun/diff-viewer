@@ -1,4 +1,4 @@
-import { Box, TableRow, Typography } from "@mui/material";
+import { Box, TableRow, Typography, useTheme } from "@mui/material";
 import type { Hunk } from "diff";
 
 import { getAlignedLinesWithNumbers } from "../../../utils/helpers";
@@ -10,6 +10,7 @@ interface HunkViewerProps {
 }
 
 export default function HunkViewer({ hunk, lineVersion }: HunkViewerProps) {
+  const { spacing } = useTheme();
   const aligned = getAlignedLinesWithNumbers(hunk);
 
   return aligned.map((line, lineIndex) => (
@@ -21,17 +22,17 @@ export default function HunkViewer({ hunk, lineVersion }: HunkViewerProps) {
         ...(line[`${lineVersion}LineType`] === "+" && { bgcolor: "#eaffea" }),
       }}
     >
-      <MinimalTableCell sx={{ userSelect: "none" }}>
-        <Typography variant="body1">
+      <MinimalTableCell sx={{ userSelect: "none", minWidth: spacing(7) }}>
+        <Typography variant="body1" sx={{ color: "grey.500", textAlign: "right", fontVariantNumeric: "tabular-nums" }}>
           {line[`${lineVersion}LineNumber`] ?? ''}
         </Typography>
       </MinimalTableCell>
-      <MinimalTableCell sx={{ userSelect: "none" }}>
-        <Typography variant="body1">
+      <MinimalTableCell sx={{ userSelect: "none", minWidth: spacing(3) }}>
+        <Typography variant="body1" sx={{ color: "grey.900", textAlign: "center" }}>
           {line[`${lineVersion}LineType`] ?? ''}
         </Typography>
       </MinimalTableCell>
-      <MinimalTableCell>
+      <MinimalTableCell sx={{ width: "100%" }}>
         <Box sx={{ minWidth: "max-content" }}>
           <Typography
             variant="body1"

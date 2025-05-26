@@ -1,5 +1,5 @@
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { Box, Button, Table, TableBody, Typography, useTheme } from '@mui/material';
+import { Box, Button, Divider, Table, TableBody, Typography, useTheme } from '@mui/material';
 import React, { useState } from 'react';
 import { parsePatch, type ParsedDiff } from 'diff';
 
@@ -25,7 +25,7 @@ export function DiffViewer() {
   };
 
   return (
-    <Box>
+    <Box sx={{ p: spacing(1) }}>
       <Typography variant="h4">Diff Viewer (Side-by-Side)</Typography>
       
       <Button
@@ -44,48 +44,51 @@ export function DiffViewer() {
         />
       </Button>
 
-      {(parsed ?? []).map((file, i) => {
-        const { fileChangeType, formattedPath } = formatFileChangePath(file.oldFileName, file.newFileName);
+      <Box>
+        {(parsed ?? []).map((file, i) => {
+          const { fileChangeType, formattedPath } = formatFileChangePath(file.oldFileName, file.newFileName);
 
-        return (
-          <Box key={i} sx={{ marginTop: spacing(3) }}>
-            <Box sx={{ display: "flex", alignItems: "center", gap: spacing(1) }}>
-              <Typography variant="h6">{formattedPath}</Typography>
-              {/* TODO: extract this to its own component with different colors for the different states */}
-              <Typography variant="h6" sx={{ color: "blue.600", border: 1, borderRadius: spacing(0.5), borderColor: "blue.600", px: spacing(1) }}>{fileChangeType}</Typography>
-            </Box>
-  
-            <Box sx={{ display: "flex", gap: spacing(2) }}>
-              <Box sx={{ width: "50%", overflowX: "scroll" }}>
-                <Table>
-                  <TableBody>
-                    {file.hunks.map((hunk, hunkIndex) => (
-                      <React.Fragment key={hunkIndex}>
-                        <HunkHeader>{generateHunkHeader(hunk)}</HunkHeader>
-                        <HunkViewer hunk={hunk} lineVersion="old" />
-                      </React.Fragment>
-                    ))}
-                  </TableBody>
-                </Table>
+          return (
+            <Box key={i} sx={{ mb: spacing(3) }}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: spacing(1) }}>
+                <Typography variant="h6">{formattedPath}</Typography>
+                {/* TODO: extract this to its own component with different colors for the different states */}
+                <Typography variant="h6" sx={{ color: "blue.600", border: 1, borderRadius: spacing(0.5), borderColor: "blue.600", px: spacing(1) }}>{fileChangeType}</Typography>
               </Box>
-  
-              <Box sx={{ width: "50%", overflowX: "scroll" }}>
-                <Table>
-                  <TableBody>
-                    {file.hunks.map((hunk, hunkIndex) => (
-                      <React.Fragment key={hunkIndex}>
-                        <HunkHeader />
-                        <HunkViewer hunk={hunk} lineVersion="new" />
-                      </React.Fragment>
-                    ))}
-                  </TableBody>
-                </Table>
+    
+              <Box sx={{ display: "flex", border: 1, borderColor: "grey.600" }}>
+                <Box sx={{ flex: 1, overflowX: "scroll" }}>
+                  <Table>
+                    <TableBody>
+                      {file.hunks.map((hunk, hunkIndex) => (
+                        <React.Fragment key={hunkIndex}>
+                          <HunkHeader>{generateHunkHeader(hunk)}</HunkHeader>
+                          <HunkViewer hunk={hunk} lineVersion="old" />
+                        </React.Fragment>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </Box>
+
+                <Divider orientation="vertical" sx={{ height: "unset", bgcolor: "grey.600" }} />
+    
+                <Box sx={{ flex: 1, overflowX: "scroll" }}>
+                  <Table>
+                    <TableBody>
+                      {file.hunks.map((hunk, hunkIndex) => (
+                        <React.Fragment key={hunkIndex}>
+                          <HunkHeader />
+                          <HunkViewer hunk={hunk} lineVersion="new" />
+                        </React.Fragment>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </Box>
               </Box>
             </Box>
-  
-          </Box>
-        );
-      })}
+          );
+        })}
+      </Box>
     </Box>
   );
 };

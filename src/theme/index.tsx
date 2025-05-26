@@ -24,6 +24,15 @@ let theme = createTheme({
     blue: customBlue,
     yellow: customYellow,
   },
+  components: {
+    MuiTable: {
+      styleOverrides: {
+        root: {
+          width: "unset",
+        },
+      },
+    },
+  },
 });
 
 theme = responsiveFontSizes(theme);
