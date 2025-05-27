@@ -44,19 +44,19 @@ export function DiffViewer() {
         />
       </Button>
 
-      <Box>
+      <Box sx={{ display: "grid", gap: spacing(3), gridTemplateColumns: "1fr", width: "100%" }}>
         {(parsed ?? []).map((file, i) => {
           const { fileChangeType, formattedPath } = formatFileChangePath(file.oldFileName, file.newFileName);
 
           return (
-            <Box key={i} sx={{ mb: spacing(3) }}>
-              <Box sx={{ display: "flex", alignItems: "center", gap: spacing(1) }}>
+            <Box key={i} sx={{ minWidth: 0, display: "grid", gap: spacing(1) }}>
+              <Box sx={{ minWidth: 0, display: "flex", alignItems: "center", gap: spacing(1) }}>
                 <Typography variant="h6">{formattedPath}</Typography>
                 {/* TODO: extract this to its own component with different colors for the different states */}
                 <Typography variant="h6" sx={{ color: "blue.600", border: 1, borderRadius: spacing(0.5), borderColor: "blue.600", px: spacing(1) }}>{fileChangeType}</Typography>
               </Box>
     
-              <Box sx={{ display: "flex", border: 1, borderColor: "grey.600" }}>
+              <Box sx={{ minWidth: 0, display: "flex", border: 1, borderColor: "grey.600" }}>
                 <Box sx={{ flex: 1, overflowX: "scroll" }}>
                   <Table>
                     <TableBody>
