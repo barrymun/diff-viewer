@@ -26,6 +26,9 @@ importers:
       diff:
         specifier: ^7.0.0
         version: 7.0.0
+      interweave:
+        specifier: ^13.1.1
+        version: 13.1.1(react@19.1.0)
       react:
         specifier: ^19.1.0
         version: 19.1.0
@@ -1148,6 +1151,11 @@ packages:
 
   inherits@2.0.4:
     resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==}
+
+  interweave@13.1.1:
+    resolution: {integrity: sha512-5GdAavzK1i2BeeLTPzj0o6/zJMfLqQZq/2Q4c3ALT8ByEWf1syzl2MlQMTUoWzETy1x1/cAkZjiqOlulaoDRxw==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
   ipaddr.js@1.9.1:
     resolution: {integrity: sha512-0KI/607xoxSToH7GjN1FfSbLoU0+btTicjsQSWQlh/hZykN8KpmMf7uYwPW3R+akZ6R/w18ZlXSHBYXiYUPO3g==}
@@ -2688,6 +2696,11 @@ snapshots:
   imurmurhash@0.1.4: {}
 
   inherits@2.0.4: {}
+
+  interweave@13.1.1(react@19.1.0):
+    dependencies:
+      escape-html: 1.0.3
+      react: 19.1.0
 
   ipaddr.js@1.9.1: {}
 

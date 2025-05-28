@@ -1,5 +1,6 @@
 import { Box, TableRow, Typography, useTheme } from "@mui/material";
 import type { Hunk } from "diff";
+import { Interweave } from "interweave";
 
 import { getAlignedLinesWithNumbers } from "../../../utils/helpers";
 import MinimalTableCell from "../../styled/minimalTableCell";
@@ -34,11 +35,9 @@ export default function HunkViewer({ hunk, lineVersion }: HunkViewerProps) {
       </MinimalTableCell>
       <MinimalTableCell sx={{ width: "100%" }}>
         <Box sx={{ minWidth: "max-content" }}>
-          <Typography
-            variant="body1"
-            sx={{ whiteSpace: "pre-wrap" }}
-            dangerouslySetInnerHTML={{ __html: line[`${lineVersion}Line`] ?? ' ' }}
-          />
+          <Typography variant="body1" sx={{ whiteSpace: "pre-wrap" }}>
+            <Interweave content={line[`${lineVersion}Line`] ?? ' '} />
+          </Typography>
         </Box>
       </MinimalTableCell>
     </TableRow>
