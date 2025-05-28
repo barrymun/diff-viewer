@@ -5,6 +5,15 @@ export function generateHunkHeader(hunk: Hunk) {
   return `@@ -${hunk.oldStart},${hunk.oldLines} +${hunk.newStart},${hunk.newLines} @@`;
 }
 
+export function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/{/g, '&#123;')
+    .replace(/}/g, '&#125;');
+}
+
 export function getAlignedLinesWithNumbers(hunk: Hunk) {
   const { lines, oldStart, newStart } = hunk;
 
@@ -71,13 +80,14 @@ export function getAlignedLinesWithNumbers(hunk: Hunk) {
           newLineHtml = '';
       
           for (const part of changes) {
+            const escapedPart = escapeHtml(part.value);
             if (part.added) {
-              newLineHtml += `<span style="background-color: #a6f3a6;">${part.value}</span>`;
+              newLineHtml += `<ins>${escapedPart}</ins>`;
             } else if (part.removed) {
-              oldLineHtml += `<span style="background-color: #f7a6a6;">${part.value}</span>`;
+              oldLineHtml += `<del>${escapedPart}</del>`;
             } else {
-              oldLineHtml += part.value;
-              newLineHtml += part.value;
+              oldLineHtml += escapedPart;
+              newLineHtml += escapedPart;
             }
           }
         }
