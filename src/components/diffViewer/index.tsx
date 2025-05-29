@@ -1,17 +1,16 @@
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { Box, Button, Table, TableBody, Typography, useTheme } from '@mui/material';
+import { Box, Button, Typography, useTheme } from '@mui/material';
 import React, { useState } from 'react';
 import { parsePatch, type ParsedDiff } from 'diff';
 
 import VisuallyHiddenInput from '../styled/visuallyHiddenInput';
-import HunkViewer from './hunkViewer';
-// import HunkHeader from './hunkHeader';
+import SideBySideViewer from './sideBySideViewer';
 import { formatFileChangePath } from '../../utils/helpers';
 
 export function DiffViewer() {
   const { spacing } = useTheme();
 
-  const [parsed, setParsed] = useState<ParsedDiff[] | null>(null);
+  const [parsedDiffs, setParsedDiffs] = useState<ParsedDiff[] | null>(null);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -21,8 +20,8 @@ export function DiffViewer() {
 
     const content = await file.text();
     const parsedPatch = parsePatch(content);
-    setParsed(parsedPatch);
-    // setParsed(parsedPatch.length > 0 ? [parsedPatch[0]] : []);
+    setParsedDiffs(parsedPatch);
+    // setParsedDiffs(parsedPatch.length > 0 ? [parsedPatch[0]] : []);
   };
 
   return (
@@ -46,8 +45,8 @@ export function DiffViewer() {
       </Button>
 
       <Box sx={{ display: "grid", gap: spacing(3), gridTemplateColumns: "1fr", width: "100%" }}>
-        {(parsed ?? []).map((file, i) => {
-          const { fileChangeType, formattedPath } = formatFileChangePath(file.oldFileName, file.newFileName);
+        {(parsedDiffs ?? []).map((parsedDiff, i) => {
+          const { fileChangeType, formattedPath } = formatFileChangePath(parsedDiff.oldFileName, parsedDiff.newFileName);
 
           return (
             <Box key={i} sx={{ minWidth: 0, display: "grid", gap: spacing(1) }}>
@@ -58,16 +57,7 @@ export function DiffViewer() {
               </Box>
     
               <Box sx={{ minWidth: 0, display: "flex", border: 1, borderColor: "grey.600" }}>
-                <Table>
-                  <TableBody>
-                    {file.hunks.map((hunk, hunkIndex) => (
-                      <React.Fragment key={hunkIndex}>
-                        {/* <HunkHeader>{generateHunkHeader(hunk)}</HunkHeader> */}
-                        <HunkViewer hunk={hunk} />
-                      </React.Fragment>
-                    ))}
-                  </TableBody>
-                </Table>
+                <SideBySideViewer parsedDiff={parsedDiff} />
               </Box>
             </Box>
           );
