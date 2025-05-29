@@ -2,11 +2,3 @@ del, ins {
   text-decoration: unset;
   border-radius: 2px;
 }
-
-del {
-  background-color: #f7a6a6;
-}
-
-ins {
-  background-color: #a6f3a6;
-}

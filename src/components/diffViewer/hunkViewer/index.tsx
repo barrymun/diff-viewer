@@ -1,45 +1,78 @@
-import { Box, TableRow, Typography, useTheme } from "@mui/material";
-import type { Hunk } from "diff";
-import { Interweave } from "interweave";
+import { Box, TableRow, Typography } from "@mui/material";
+import { diffWordsWithSpace, type Hunk } from "diff";
 
-import { getAlignedLinesWithNumbers } from "../../../utils/helpers";
+import { alignHunkLines } from "../../../utils/helpers";
 import MinimalTableCell from "../../styled/minimalTableCell";
 
 interface HunkViewerProps {
   hunk: Hunk;
-  lineVersion: "old" | "new";
 }
 
-export default function HunkViewer({ hunk, lineVersion }: HunkViewerProps) {
-  const { spacing } = useTheme();
-  const aligned = getAlignedLinesWithNumbers(hunk);
+export default function HunkViewer({ hunk }: HunkViewerProps) {
+  const alignedLines = alignHunkLines(hunk);
 
-  return aligned.map((line, lineIndex) => (
-    <TableRow
-      key={lineIndex}
-      sx={{
-        ...(!line[`${lineVersion}Line`] && { bgcolor: "grey.200" }),
-        ...(line[`${lineVersion}LineType`] === "-" && { bgcolor: "#ffecec" }),
-        ...(line[`${lineVersion}LineType`] === "+" && { bgcolor: "#eaffea" }),
-      }}
-    >
-      <MinimalTableCell sx={{ userSelect: "none", minWidth: spacing(7) }}>
-        <Typography variant="body1" sx={{ color: "grey.500", textAlign: "right", fontVariantNumeric: "tabular-nums" }}>
-          {line[`${lineVersion}LineNumber`] ?? ''}
-        </Typography>
-      </MinimalTableCell>
-      <MinimalTableCell sx={{ userSelect: "none", minWidth: spacing(3) }}>
-        <Typography variant="body1" sx={{ color: "grey.900", textAlign: "center" }}>
-          {line[`${lineVersion}LineType`] ?? ''}
-        </Typography>
-      </MinimalTableCell>
-      <MinimalTableCell sx={{ width: "100%" }}>
-        <Box sx={{ minWidth: "max-content" }}>
-          <Typography variant="body1" sx={{ whiteSpace: "pre-wrap" }}>
-            <Interweave content={line[`${lineVersion}Line`] ?? ' '} />
+  return alignedLines.map((line, idx) => {
+    const isAdded = line.oldLine === undefined && line.newLine !== undefined;
+    const isRemoved = line.newLine === undefined && line.oldLine !== undefined;
+    const isModified = line.oldLine && line.newLine && line.oldLine !== line.newLine;
+
+    const leftBg = isAdded ? "grey.200" : isRemoved || isModified ? "red.50" : "white";
+    const rightBg = isRemoved ? "grey.200" : isAdded || isModified ? "green.50" : "white";
+
+    let oldLineContent: React.ReactNode = line.oldLine ?? "";
+    let newLineContent: React.ReactNode = line.newLine ?? "";
+
+    if (isModified) {
+      const diff = diffWordsWithSpace(line.oldLine!, line.newLine!);
+    
+      oldLineContent = diff
+        .filter(part => !part.added) // skip added parts in old column
+        .map((part, i) =>
+          part.removed ? (
+            <Box key={i} component="del" sx={{ backgroundColor: "red.200" }}>
+              {part.value}
+            </Box>
+          ) : (
+            <Box key={i} component="span">{part.value}</Box>
+          )
+        );
+    
+      newLineContent = diff
+        .filter(part => !part.removed) // skip removed parts in new column
+        .map((part, i) =>
+          part.added ? (
+            <Box key={i} component="ins" sx={{ backgroundColor: "green.200" }}>
+              {part.value}
+            </Box>
+          ) : (
+            <Box key={i} component="span">{part.value}</Box>
+          )
+        );
+    }    
+
+    return (
+      <TableRow key={idx}>
+        <MinimalTableCell sx={{ bgcolor: leftBg }}>
+          <Typography variant="body1" sx={{ color: "grey.500", textAlign: "right", fontVariantNumeric: "tabular-nums" }}>
+            {line.oldLineNumber ?? ""}
           </Typography>
-        </Box>
-      </MinimalTableCell>
-    </TableRow>
-  ))
+        </MinimalTableCell>
+        <MinimalTableCell sx={{ bgcolor: leftBg }}>
+          <Typography variant="body1" sx={{ whiteSpace: "pre-wrap" }}>
+            {oldLineContent}
+          </Typography>
+        </MinimalTableCell>
+        <MinimalTableCell sx={{ bgcolor: rightBg }}>
+          <Typography variant="body1" sx={{ color: "grey.500", textAlign: "right", fontVariantNumeric: "tabular-nums" }}>
+            {line.newLineNumber ?? ""}
+          </Typography>
+        </MinimalTableCell>
+        <MinimalTableCell sx={{ bgcolor: rightBg }}>
+          <Typography variant="body1" sx={{ whiteSpace: "pre-wrap" }}>
+            {newLineContent}
+          </Typography>
+        </MinimalTableCell>
+      </TableRow>
+    );
+  });
 }

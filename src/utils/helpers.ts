@@ -1,104 +1,53 @@
-import { diffWordsWithSpace, type Hunk } from "diff";
-import type { FormattedPathResult, LineType } from "./types";
+import { type Hunk } from "diff";
+import type { AlignedLine, FormattedPathResult } from "./types";
 
 export function generateHunkHeader(hunk: Hunk) {
   return `@@ -${hunk.oldStart},${hunk.oldLines} +${hunk.newStart},${hunk.newLines} @@`;
 }
 
-export function escapeHtml(str: string): string {
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/{/g, '&#123;')
-    .replace(/}/g, '&#125;');
-}
-
-export function getAlignedLinesWithNumbers(hunk: Hunk) {
+export function alignHunkLines(hunk: Hunk): AlignedLine[] {
   const { lines, oldStart, newStart } = hunk;
 
-  const result: {
-    oldLineType: LineType["diffLineType"];
-    oldLineNumber?: number;
-    oldLine?: string | null;
-    newLineType: LineType["diffLineType"];
-    newLineNumber?: number;
-    newLine?: string | null;
-  }[] = [];
-
-  let i = 0;
   let oldLine = oldStart;
   let newLine = newStart;
+  const result: AlignedLine[] = [];
 
-  const pendingRemovals: LineType[] = [];
-  const pendingAdditions: LineType[] = [];
-
+  let i = 0;
   while (i < lines.length) {
     const line = lines[i];
 
-    if (line.startsWith(' ')) {
+    if (line.startsWith(" ")) {
+      const text = line.slice(1);
       result.push({
-        oldLineType: null,
-        oldLineNumber: oldLine,
-        oldLine: line,
-        newLineType: null,
-        newLineNumber: newLine,
-        newLine: line,
+        oldLineNumber: oldLine++,
+        oldLine: text,
+        newLineNumber: newLine++,
+        newLine: text,
       });
-      oldLine++;
-      newLine++;
       i++;
     } else {
-      // Start collecting a contiguous diff block
-      pendingRemovals.length = 0;
-      pendingAdditions.length = 0;
+      const pendingRemovals: string[] = [];
+      const pendingAdditions: string[] = [];
 
-      while (i < lines.length && (lines[i].startsWith('-') || lines[i].startsWith('+'))) {
-        if (lines[i].startsWith('-')) {
-          pendingRemovals.push({ diffLineType: "-", line: lines[i].replace("-", " "), lineNumber: oldLine++ });
-        } else {
-          pendingAdditions.push({ diffLineType: "+", line: lines[i].replace("+", " "), lineNumber: newLine++ });
+      // collect a contiguous block of +/- lines
+      while (i < lines.length && (lines[i].startsWith("-") || lines[i].startsWith("+"))) {
+        if (lines[i].startsWith("-")) {
+          pendingRemovals.push(lines[i].slice(1));
+          i++;
+        } else if (lines[i].startsWith("+")) {
+          pendingAdditions.push(lines[i].slice(1));
+          i++;
         }
-        i++;
       }
 
       const maxLen = Math.max(pendingRemovals.length, pendingAdditions.length);
+
       for (let j = 0; j < maxLen; j++) {
-        const removal = pendingRemovals[j];
-        const addition = pendingAdditions[j];
-      
-        const oldLineContent = removal?.line ?? null;
-        const newLineContent = addition?.line ?? null;
-      
-        let oldLineHtml = oldLineContent;
-        let newLineHtml = newLineContent;
-      
-        if (removal?.line && addition?.line) {
-          const changes = diffWordsWithSpace(removal.line, addition.line);
-      
-          oldLineHtml = '';
-          newLineHtml = '';
-      
-          for (const part of changes) {
-            const escapedPart = escapeHtml(part.value);
-            if (part.added) {
-              newLineHtml += `<ins>${escapedPart}</ins>`;
-            } else if (part.removed) {
-              oldLineHtml += `<del>${escapedPart}</del>`;
-            } else {
-              oldLineHtml += escapedPart;
-              newLineHtml += escapedPart;
-            }
-          }
-        }
-      
         result.push({
-          oldLineType: removal?.diffLineType,
-          oldLineNumber: removal?.lineNumber,
-          oldLine: oldLineHtml,
-          newLineType: addition?.diffLineType,
-          newLineNumber: addition?.lineNumber,
-          newLine: newLineHtml,
+          oldLineNumber: j < pendingRemovals.length ? oldLine++ : undefined,
+          oldLine: j < pendingRemovals.length ? pendingRemovals[j] : undefined,
+          newLineNumber: j < pendingAdditions.length ? newLine++ : undefined,
+          newLine: j < pendingAdditions.length ? pendingAdditions[j] : undefined,
         });
       }
     }

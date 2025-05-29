@@ -1,12 +1,12 @@
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { Box, Button, Divider, Table, TableBody, Typography, useTheme } from '@mui/material';
+import { Box, Button, Table, TableBody, Typography, useTheme } from '@mui/material';
 import React, { useState } from 'react';
 import { parsePatch, type ParsedDiff } from 'diff';
 
 import VisuallyHiddenInput from '../styled/visuallyHiddenInput';
 import HunkViewer from './hunkViewer';
-import HunkHeader from './hunkHeader';
-import { formatFileChangePath, generateHunkHeader } from '../../utils/helpers';
+// import HunkHeader from './hunkHeader';
+import { formatFileChangePath } from '../../utils/helpers';
 
 export function DiffViewer() {
   const { spacing } = useTheme();
@@ -22,6 +22,7 @@ export function DiffViewer() {
     const content = await file.text();
     const parsedPatch = parsePatch(content);
     setParsed(parsedPatch);
+    // setParsed(parsedPatch.length > 0 ? [parsedPatch[0]] : []);
   };
 
   return (
@@ -57,33 +58,16 @@ export function DiffViewer() {
               </Box>
     
               <Box sx={{ minWidth: 0, display: "flex", border: 1, borderColor: "grey.600" }}>
-                <Box sx={{ flex: 1, overflowX: "scroll" }}>
-                  <Table>
-                    <TableBody>
-                      {file.hunks.map((hunk, hunkIndex) => (
-                        <React.Fragment key={hunkIndex}>
-                          <HunkHeader>{generateHunkHeader(hunk)}</HunkHeader>
-                          <HunkViewer hunk={hunk} lineVersion="old" />
-                        </React.Fragment>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </Box>
-
-                <Divider orientation="vertical" sx={{ height: "unset", bgcolor: "grey.600" }} />
-    
-                <Box sx={{ flex: 1, overflowX: "scroll" }}>
-                  <Table>
-                    <TableBody>
-                      {file.hunks.map((hunk, hunkIndex) => (
-                        <React.Fragment key={hunkIndex}>
-                          <HunkHeader />
-                          <HunkViewer hunk={hunk} lineVersion="new" />
-                        </React.Fragment>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </Box>
+                <Table>
+                  <TableBody>
+                    {file.hunks.map((hunk, hunkIndex) => (
+                      <React.Fragment key={hunkIndex}>
+                        {/* <HunkHeader>{generateHunkHeader(hunk)}</HunkHeader> */}
+                        <HunkViewer hunk={hunk} />
+                      </React.Fragment>
+                    ))}
+                  </TableBody>
+                </Table>
               </Box>
             </Box>
           );
