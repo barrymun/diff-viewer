@@ -11,8 +11,8 @@ interface SideBySideViewerProps {
 export default function SideBySideViewer({ parsedDiff }: SideBySideViewerProps) {
 
   return (
-    <>
-      <Box sx={{ flex: 1, overflowX: "auto" }}>
+    <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1px 1fr" }}>
+      <Box sx={{ minWidth: 0, overflowX: "auto" }}>
         <Table>
           <TableBody>
             {parsedDiff.hunks.map((hunk, hunkIndex) => <LeftSide key={hunkIndex} hunk={hunk} />)}
@@ -20,15 +20,15 @@ export default function SideBySideViewer({ parsedDiff }: SideBySideViewerProps) 
         </Table>
       </Box>
 
-      <Divider />
+      <Divider orientation="vertical" />
 
-      <Box sx={{ flex: 1, overflowX: "auto" }}>
+      <Box sx={{ minWidth: 0, overflowX: "auto" }}>
         <Table>
           <TableBody>
             {parsedDiff.hunks.map((hunk, hunkIndex) => <RightSide key={hunkIndex} hunk={hunk} />)}
           </TableBody>
         </Table>
       </Box>
-    </>
+    </Box>
   );
 }

@@ -44,7 +44,7 @@ export function DiffViewer() {
         />
       </Button>
 
-      <Box sx={{ display: "grid", gap: spacing(3), gridTemplateColumns: "1fr", width: "100%" }}>
+      <Box sx={{ display: "grid", gridTemplateColumns: "1fr", gap: spacing(3), width: "100%" }}>
         {(parsedDiffs ?? []).map((parsedDiff, i) => {
           const { fileChangeType, formattedPath } = formatFileChangePath(parsedDiff.oldFileName, parsedDiff.newFileName);
 
@@ -56,7 +56,7 @@ export function DiffViewer() {
                 <Typography variant="h6" sx={{ color: "blue.600", border: 1, borderRadius: spacing(0.5), borderColor: "blue.600", px: spacing(1) }}>{fileChangeType}</Typography>
               </Box>
     
-              <Box sx={{ minWidth: 0, display: "flex", border: 1, borderColor: "grey.600" }}>
+              <Box sx={{ minWidth: 0, border: 1, borderColor: "grey.600" }}>
                 <SideBySideViewer parsedDiff={parsedDiff} />
               </Box>
             </Box>

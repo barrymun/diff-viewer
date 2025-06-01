@@ -1,4 +1,4 @@
-import { Box, TableRow, Typography } from "@mui/material";
+import { Box, TableRow, Typography, useTheme } from "@mui/material";
 import { diffWordsWithSpace, type Hunk } from "diff";
 
 import MinimalTableCell from "../../../styled/minimalTableCell";
@@ -9,6 +9,7 @@ interface LeftSideProps {
 }
 
 export default function LeftSide({ hunk }: LeftSideProps) {
+  const { spacing } = useTheme();
   const alignedLines = alignHunkLines(hunk);
 
   return alignedLines.map((line, idx) => {
@@ -37,7 +38,7 @@ export default function LeftSide({ hunk }: LeftSideProps) {
 
     return (
       <TableRow key={idx}>
-        <MinimalTableCell sx={{ bgcolor: leftBg }}>
+        <MinimalTableCell sx={{ bgcolor: leftBg, minWidth: spacing(6), position: "sticky", left: 0 }}>
           <Typography variant="body1" sx={{ color: "grey.500", textAlign: "right", fontVariantNumeric: "tabular-nums" }}>
             {line.oldLineNumber ?? ""}
           </Typography>
