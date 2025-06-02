@@ -52,6 +52,9 @@ export default function DiffSide({ side, hunk }: DiffSideProps) {
               key={i}
               component={isLeft ? "del" : "ins"}
               sx={{
+                textDecoration: "unset",
+                borderRadius: spacing(0.25),
+                px: spacing(0.25),
                 backgroundColor: isLeft ? "red.200" : "green.200",
                 display: "inline",
               }}
