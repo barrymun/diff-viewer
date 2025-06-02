@@ -38,18 +38,18 @@ export default function RightSide({ hunk }: RightSideProps) {
 
     return (
       <TableRow key={idx}>
-        <MinimalTableCell sx={{ bgcolor: rightBg, minWidth: spacing(6), position: "sticky", left: 0, userSelect: "none" }}>
-          <Typography variant="body1" sx={{ color: "grey.500", textAlign: "right", fontVariantNumeric: "tabular-nums" }}>
+        <MinimalTableCell sx={{ bgcolor: rightBg, minWidth: spacing(7), position: "sticky", left: 0, textAlign: "right", userSelect: "none" }}>
+          <Typography variant="body1" component="span" sx={{ color: "grey.500", fontVariantNumeric: "tabular-nums" }}>
             {line.newLineNumber ?? ""}
           </Typography>
         </MinimalTableCell>
         <MinimalTableCell sx={{ bgcolor: rightBg, minWidth: spacing(3), textAlign: "center", userSelect: "none" }}>
-          <Typography variant="body1">
+          <Typography variant="body1" component="span">
             {(isAdded || isModified) && "+"}
           </Typography>
         </MinimalTableCell>
         <MinimalTableCell sx={{ bgcolor: rightBg, width: "100%" }}>
-          <Typography variant="body1" sx={{ whiteSpace: "pre" }}>
+          <Typography variant="body1" component="span" sx={{ whiteSpace: "pre", userSelect: "text" }}>
             {newLineContent}
           </Typography>
         </MinimalTableCell>
