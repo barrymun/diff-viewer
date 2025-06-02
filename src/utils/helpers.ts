@@ -1,16 +1,16 @@
 import { type Hunk } from "diff";
-import type { AlignedLine, FormattedPathResult } from "./types";
+import type { AlignedHunkLine, FormattedPathResult } from "./types";
 
 export function generateHunkHeader(hunk: Hunk) {
   return `@@ -${hunk.oldStart},${hunk.oldLines} +${hunk.newStart},${hunk.newLines} @@`;
 }
 
-export function alignHunkLines(hunk: Hunk): AlignedLine[] {
+export function alignHunkLines(hunk: Hunk): AlignedHunkLine[] {
   const { lines, oldStart, newStart } = hunk;
 
   let oldLine = oldStart;
   let newLine = newStart;
-  const result: AlignedLine[] = [];
+  const result: AlignedHunkLine[] = [];
 
   let i = 0;
   while (i < lines.length) {

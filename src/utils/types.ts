@@ -1,4 +1,4 @@
-export type AlignedLine = {
+export type AlignedHunkLine = {
   oldLineNumber?: number;
   oldLine?: string;
   newLineNumber?: number;

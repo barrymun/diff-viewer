@@ -38,9 +38,14 @@ export default function LeftSide({ hunk }: LeftSideProps) {
 
     return (
       <TableRow key={idx}>
-        <MinimalTableCell sx={{ bgcolor: leftBg, minWidth: spacing(6), position: "sticky", left: 0 }}>
+        <MinimalTableCell sx={{ bgcolor: leftBg, minWidth: spacing(6), position: "sticky", left: 0, userSelect: "none" }}>
           <Typography variant="body1" sx={{ color: "grey.500", textAlign: "right", fontVariantNumeric: "tabular-nums" }}>
             {line.oldLineNumber ?? ""}
+          </Typography>
+        </MinimalTableCell>
+        <MinimalTableCell sx={{ bgcolor: leftBg, minWidth: spacing(3), textAlign: "center", userSelect: "none" }}>
+          <Typography variant="body1">
+            {(isRemoved || isModified) && "-"}
           </Typography>
         </MinimalTableCell>
         <MinimalTableCell sx={{ bgcolor: leftBg, width: "100%" }}>
