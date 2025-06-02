@@ -43,7 +43,7 @@ export default function LeftSide({ hunk }: LeftSideProps) {
             {line.oldLineNumber ?? ""}
           </Typography>
         </MinimalTableCell>
-        <MinimalTableCell sx={{ bgcolor: leftBg }}>
+        <MinimalTableCell sx={{ bgcolor: leftBg, width: "100%" }}>
           <Typography variant="body1" sx={{ whiteSpace: "pre" }}>
             {oldLineContent}
           </Typography>

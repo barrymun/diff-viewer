@@ -43,7 +43,7 @@ export default function RightSide({ hunk }: RightSideProps) {
             {line.newLineNumber ?? ""}
           </Typography>
         </MinimalTableCell>
-        <MinimalTableCell sx={{ bgcolor: rightBg }}>
+        <MinimalTableCell sx={{ bgcolor: rightBg, width: "100%" }}>
           <Typography variant="body1" sx={{ whiteSpace: "pre" }}>
             {newLineContent}
           </Typography>
