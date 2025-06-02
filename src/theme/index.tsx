@@ -5,6 +5,7 @@ import { customBlue, customGreen, customRed, customYellow } from './customColors
 let theme = createTheme({
   typography: {
     fontFamily: [
+      '"Source Code Pro"',
       'Inter',
       '-apple-system',
       'BlinkMacSystemFont',
