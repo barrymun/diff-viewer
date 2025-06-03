@@ -4,12 +4,12 @@ import { diffWordsWithSpace, type StructuredPatchHunk } from "diff";
 import MinimalTableCell from "../../../styled/minimalTableCell";
 import { alignHunkLines } from "../../../../utils/helpers";
 
-interface DiffSideProps {
+interface DiffSideRowProps {
   side: "left" | "right";
   hunk: StructuredPatchHunk;
 }
 
-export default function DiffSide({ side, hunk }: DiffSideProps) {
+export default function DiffSideRow({ side, hunk }: DiffSideRowProps) {
   const { spacing } = useTheme();
   const alignedLines = alignHunkLines(hunk);
 
