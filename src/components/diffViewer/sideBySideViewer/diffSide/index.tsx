@@ -1,12 +1,12 @@
 import { Box, TableRow, Typography, useTheme } from "@mui/material";
-import { diffWordsWithSpace, type Hunk } from "diff";
+import { diffWordsWithSpace, type StructuredPatchHunk } from "diff";
 
 import MinimalTableCell from "../../../styled/minimalTableCell";
 import { alignHunkLines } from "../../../../utils/helpers";
 
 interface DiffSideProps {
   side: "left" | "right";
-  hunk: Hunk;
+  hunk: StructuredPatchHunk;
 }
 
 export default function DiffSide({ side, hunk }: DiffSideProps) {

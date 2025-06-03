@@ -1,11 +1,11 @@
 import { TableRow, Typography, useTheme } from "@mui/material";
-import type { Hunk } from "diff";
+import type { StructuredPatchHunk } from "diff";
 
 import MinimalTableCell from "../../../styled/minimalTableCell";
 import { generateHunkHeader } from "../../../../utils/helpers";
 
 interface HunkHeaderProps {
-  hunk?: Hunk;
+  hunk?: StructuredPatchHunk;
 }
 
 export default function DiffHeader({ hunk }: HunkHeaderProps) {

@@ -1,7 +1,7 @@
-import { type Hunk } from "diff";
+import { type StructuredPatchHunk } from "diff";
 import type { AlignedHunkLine, FormattedPathResult } from "./types";
 
-export function generateHunkHeader(hunk: Hunk) {
+export function generateHunkHeader(hunk: StructuredPatchHunk) {
   return `@@ -${hunk.oldStart},${hunk.oldLines} +${hunk.newStart},${hunk.newLines} @@`;
 }
 
@@ -25,7 +25,7 @@ export function collectContiguousChanges(lines: string[], startIndex: number): [
   return [removals, additions];
 }
 
-export function alignHunkLines(hunk: Hunk): AlignedHunkLine[] {
+export function alignHunkLines(hunk: StructuredPatchHunk): AlignedHunkLine[] {
   const { lines, oldStart, newStart } = hunk;
 
   let oldLine = oldStart;

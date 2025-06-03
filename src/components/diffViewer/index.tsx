@@ -1,7 +1,7 @@
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { Box, Button, Typography, useTheme } from '@mui/material';
 import React, { useState } from 'react';
-import { parsePatch, type ParsedDiff } from 'diff';
+import { parsePatch, type StructuredPatch } from 'diff';
 
 import VisuallyHiddenInput from '../styled/visuallyHiddenInput';
 import SideBySideViewer from './sideBySideViewer';
@@ -10,7 +10,7 @@ import { formatFileChangePath } from '../../utils/helpers';
 export function DiffViewer() {
   const { spacing } = useTheme();
 
-  const [parsedDiffs, setParsedDiffs] = useState<ParsedDiff[] | null>(null);
+  const [parsedDiffs, setParsedDiffs] = useState<StructuredPatch[] | null>(null);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -45,8 +45,8 @@ export function DiffViewer() {
       </Button>
 
       <Box sx={{ display: "grid", gridTemplateColumns: "1fr", gap: spacing(3), width: "100%" }}>
-        {(parsedDiffs ?? []).map((parsedDiff, i) => {
-          const { fileChangeType, formattedPath } = formatFileChangePath(parsedDiff.oldFileName, parsedDiff.newFileName);
+        {(parsedDiffs ?? []).map((structuredPatch, i) => {
+          const { fileChangeType, formattedPath } = formatFileChangePath(structuredPatch.oldFileName, structuredPatch.newFileName);
 
           return (
             <Box key={i} sx={{ minWidth: 0, display: "grid", gap: spacing(1) }}>
@@ -57,7 +57,7 @@ export function DiffViewer() {
               </Box>
     
               <Box sx={{ minWidth: 0, border: 1, borderColor: "grey.600" }}>
-                <SideBySideViewer parsedDiff={parsedDiff} />
+                <SideBySideViewer structuredPatch={structuredPatch} />
               </Box>
             </Box>
           );

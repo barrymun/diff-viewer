@@ -1,4 +1,4 @@
-import type { Hunk } from 'diff';
+import type { StructuredPatchHunk } from 'diff';
 import { describe, expect, it } from 'vitest';
 
 import { alignHunkLines, collectContiguousChanges } from './helpers';
@@ -49,7 +49,7 @@ describe(collectContiguousChanges.name, () => {
 
 describe(alignHunkLines.name, () => {
   it('aligns unchanged lines', () => {
-    const hunk: Hunk = {
+    const hunk: StructuredPatchHunk = {
       oldStart: 1,
       newStart: 1,
       oldLines: 2,
@@ -74,7 +74,7 @@ describe(alignHunkLines.name, () => {
   });
 
   it('aligns pure deletions', () => {
-    const hunk: Hunk = {
+    const hunk: StructuredPatchHunk = {
       oldStart: 3,
       newStart: 3,
       oldLines: 2,
@@ -99,7 +99,7 @@ describe(alignHunkLines.name, () => {
   });
 
   it('aligns pure additions', () => {
-    const hunk: Hunk = {
+    const hunk: StructuredPatchHunk = {
       oldStart: 5,
       newStart: 5,
       oldLines: 0,
@@ -124,7 +124,7 @@ describe(alignHunkLines.name, () => {
   });
 
   it('aligns mixed additions and deletions', () => {
-    const hunk: Hunk = {
+    const hunk: StructuredPatchHunk = {
       oldStart: 10,
       newStart: 20,
       oldLines: 2,
@@ -155,7 +155,7 @@ describe(alignHunkLines.name, () => {
   });
 
   it('handles interleaved unchanged, removed and added lines', () => {
-    const hunk: Hunk = {
+    const hunk: StructuredPatchHunk = {
       oldStart: 1,
       newStart: 1,
       oldLines: 3,
