@@ -5,6 +5,26 @@ export function generateHunkHeader(hunk: Hunk) {
   return `@@ -${hunk.oldStart},${hunk.oldLines} +${hunk.newStart},${hunk.newLines} @@`;
 }
 
+export function collectContiguousChanges(lines: string[], startIndex: number): [string[], string[]] {
+  const removals: string[] = [];
+  const additions: string[] = [];
+
+  let i = startIndex;
+  while (i < lines.length) {
+    const line = lines[i];
+    if (line.startsWith('-')) {
+      removals.push(line.slice(1));
+    } else if (line.startsWith('+')) {
+      additions.push(line.slice(1));
+    } else {
+      break;
+    }
+    i++;
+  }
+
+  return [removals, additions];
+}
+
 export function alignHunkLines(hunk: Hunk): AlignedHunkLine[] {
   const { lines, oldStart, newStart } = hunk;
 
@@ -13,10 +33,11 @@ export function alignHunkLines(hunk: Hunk): AlignedHunkLine[] {
   const result: AlignedHunkLine[] = [];
 
   let i = 0;
+
   while (i < lines.length) {
     const line = lines[i];
 
-    if (line.startsWith(" ")) {
+    if (line.startsWith(' ')) {
       const text = line.slice(1);
       result.push({
         oldLineNumber: oldLine++,
@@ -25,31 +46,20 @@ export function alignHunkLines(hunk: Hunk): AlignedHunkLine[] {
         newLine: text,
       });
       i++;
-    } else {
-      const pendingRemovals: string[] = [];
-      const pendingAdditions: string[] = [];
+      continue;
+    }
 
-      // collect a contiguous block of +/- lines
-      while (i < lines.length && (lines[i].startsWith("-") || lines[i].startsWith("+"))) {
-        if (lines[i].startsWith("-")) {
-          pendingRemovals.push(lines[i].slice(1));
-          i++;
-        } else if (lines[i].startsWith("+")) {
-          pendingAdditions.push(lines[i].slice(1));
-          i++;
-        }
-      }
+    const [removals, additions] = collectContiguousChanges(lines, i);
+    i += removals.length + additions.length;
 
-      const maxLen = Math.max(pendingRemovals.length, pendingAdditions.length);
-
-      for (let j = 0; j < maxLen; j++) {
-        result.push({
-          oldLineNumber: j < pendingRemovals.length ? oldLine++ : undefined,
-          oldLine: j < pendingRemovals.length ? pendingRemovals[j] : undefined,
-          newLineNumber: j < pendingAdditions.length ? newLine++ : undefined,
-          newLine: j < pendingAdditions.length ? pendingAdditions[j] : undefined,
-        });
-      }
+    const maxLen = Math.max(removals.length, additions.length);
+    for (let j = 0; j < maxLen; j++) {
+      result.push({
+        oldLineNumber: removals[j] !== undefined ? oldLine++ : undefined,
+        oldLine: removals[j],
+        newLineNumber: additions[j] !== undefined ? newLine++ : undefined,
+        newLine: additions[j],
+      });
     }
   }
 
