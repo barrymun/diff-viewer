@@ -16,60 +16,60 @@ export default function App() {
   const [open, setOpen] = useState<boolean>(false);
 
   return (
-    <Box
-      sx={{
-        display: "grid",
-        gridTemplateAreas: `"header" "content"`,
-        gridTemplateRows: "auto 1fr",
-        height: "100vh",
-      }}
-    >
-      <Header position="static" open={open} sx={{ gridArea: "header" }}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={() => setOpen(true)}
-            edge="start"
-            sx={[
-              {
-                mr: 2,
-              },
-              open && { display: 'none' },
-            ]}
-          >
-            <MenuIcon />
-          </IconButton>
-
-          <Typography variant="h4">Diff Viewer (Side-by-Side)</Typography>
-        </Toolbar>
-      </Header>
-
-      <Box sx={{ gridArea: "content" }}>
-        <Drawer 
-          open={open}
-          variant="persistent" 
-          anchor="left" 
-          sx={{
-            width: drawerWidth,
-            flexShrink: 0,
-            '& .MuiDrawer-paper': {
-              width: drawerWidth,
-              boxSizing: 'border-box',
-            },
-          }}
-        >
-          <DrawerHeader>
-            <IconButton onClick={() => setOpen(false)}>
-              {direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+    <>
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateAreas: `"header" "content"`,
+          gridTemplateRows: "auto 1fr",
+          height: "100vh",
+        }}
+      >
+        <Header position="static" open={open} sx={{ gridArea: "header" }}>
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={() => setOpen(true)}
+              edge="start"
+              sx={[
+                {
+                  mr: 2,
+                },
+                open && { display: 'none' },
+              ]}
+            >
+              <MenuIcon />
             </IconButton>
-          </DrawerHeader>
-        </Drawer>
 
-        <Main open={open}>
+            <Typography variant="h4">Diff Viewer (Side-by-Side)</Typography>
+          </Toolbar>
+        </Header>
+
+        <Main open={open} sx={{ gridArea: "content" }}>
           <DiffViewer />
         </Main>
       </Box>
-    </Box>
+
+      <Drawer 
+        open={open}
+        variant="persistent" 
+        anchor="left" 
+        sx={{
+          width: drawerWidth,
+          flexShrink: 0,
+          '& .MuiDrawer-paper': {
+            width: drawerWidth,
+            boxSizing: 'border-box',
+          },
+        }}
+      >
+        <DrawerHeader>
+          <IconButton onClick={() => setOpen(false)}>
+            {direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+          </IconButton>
+        </DrawerHeader>
+      </Drawer>
+    </>
   )
 }

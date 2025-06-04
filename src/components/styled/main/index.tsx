@@ -17,4 +17,6 @@ export const Main = styled('main', {
   }),
   transform: open ? `translateX(${drawerWidth}px)` : 'translateX(0)',
   width: open ? `calc(100% - ${drawerWidth}px)` : '100%',
+  height: "100%",
+  overflowY: "auto",
 }));
