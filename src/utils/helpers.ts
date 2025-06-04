@@ -140,3 +140,38 @@ export function formatFileChangePath(
 
   return { fileChangeType: 'renamed', formattedPath };
 }
+
+export function getLineMetadata(line: AlignedHunkLine, isLeft: boolean) {
+  const isAdded = line.oldLine === undefined && line.newLine !== undefined;
+  const isRemoved = line.newLine === undefined && line.oldLine !== undefined;
+  const isModified = line.oldLine && line.newLine && line.oldLine !== line.newLine;
+
+  const lineNumber = isLeft ? line.oldLineNumber : line.newLineNumber;
+  const lineContent = isLeft ? line.oldLine : line.newLine;
+
+  const bgColor = isLeft
+    ? isAdded
+      ? "grey.200"
+      : isRemoved || isModified
+      ? "red.50"
+      : "white"
+    : isRemoved
+    ? "grey.200"
+    : isAdded || isModified
+    ? "green.50"
+    : "white";
+
+  const symbol = isLeft
+    ? (isRemoved || isModified ? "-" : "")
+    : (isAdded || isModified ? "+" : "");
+  
+  return {
+    isAdded,
+    isRemoved,
+    isModified,
+    lineNumber,
+    lineContent,
+    bgColor,
+    symbol,
+  };
+}

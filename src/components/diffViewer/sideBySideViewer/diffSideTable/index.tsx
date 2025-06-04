@@ -3,7 +3,7 @@ import type { StructuredPatch } from "diff";
 import React from "react";
 
 import DiffHeader from "../diffHeader";
-import DiffSideRow from "../diffSideRow";
+import DiffSideHunk from "../diffSideHunk";
 
 interface DiffSideTableProps {
   side: "left" | "right";
@@ -19,7 +19,7 @@ export default function DiffSideTable({ side, structuredPatch }: DiffSideTablePr
             <React.Fragment key={hunkIndex}>
               <DiffHeader />
               {side === "left" ? <DiffHeader hunk={hunk} /> : <DiffHeader />}
-              <DiffSideRow side={side} hunk={hunk} />
+              <DiffSideHunk side={side} hunk={hunk} />
             </React.Fragment>
           ))}
         </TableBody>

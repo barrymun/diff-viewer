@@ -25,9 +25,7 @@ export function DiffViewer() {
   };
 
   return (
-    <Box sx={{ p: spacing(1) }}>
-      <Typography variant="h4">Diff Viewer (Side-by-Side)</Typography>
-      
+    <>
       <Button
         component="label"
         role={undefined}
@@ -40,7 +38,7 @@ export function DiffViewer() {
           type="file"
           accept=".diff,.patch,.txt"
           onChange={handleFileUpload}
-          multiple
+          // multiple
         />
       </Button>
 
@@ -63,6 +61,6 @@ export function DiffViewer() {
           );
         })}
       </Box>
-    </Box>
+    </>
   );
 };

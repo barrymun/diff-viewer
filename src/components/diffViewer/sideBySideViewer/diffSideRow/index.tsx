@@ -1,119 +1,104 @@
 import { Box, TableRow, Typography, useTheme } from "@mui/material";
-import { diffWordsWithSpace, type StructuredPatchHunk } from "diff";
+import { diffWordsWithSpace } from "diff";
 
 import MinimalTableCell from "../../../styled/minimalTableCell";
-import { alignHunkLines } from "../../../../utils/helpers";
+import type { AlignedHunkLine } from "../../../../utils/types";
+import { useCallback, useMemo } from "react";
+import { getLineMetadata } from "../../../../utils/helpers";
 
 interface DiffSideRowProps {
   side: "left" | "right";
-  hunk: StructuredPatchHunk;
+  line: AlignedHunkLine;
 }
 
-export default function DiffSideRow({ side, hunk }: DiffSideRowProps) {
+export default function DiffSideRow({ side, line }: DiffSideRowProps) {
   const { spacing } = useTheme();
-  const alignedLines = alignHunkLines(hunk);
 
-  return alignedLines.map((line, idx) => {
-    const isAdded = line.oldLine === undefined && line.newLine !== undefined;
-    const isRemoved = line.newLine === undefined && line.oldLine !== undefined;
-    const isModified = line.oldLine && line.newLine && line.oldLine !== line.newLine;
+  const isLeft = useMemo(() => side === "left", [side]);
+  const isRight = useMemo(() => !isLeft, [isLeft]);
+  const {
+    isModified,
+    lineNumber,
+    lineContent,
+    bgColor,
+    symbol,
+  } = useMemo(() => getLineMetadata(line, isLeft), [isLeft, line]);
 
-    const isLeft = side === "left";
-    const isRight = !isLeft;
-
-    const lineNumber = isLeft ? line.oldLineNumber : line.newLineNumber;
-    const lineContent = isLeft ? line.oldLine : line.newLine;
-
-    const bgColor = isLeft
-      ? isAdded
-        ? "grey.200"
-        : isRemoved || isModified
-        ? "red.50"
-        : "white"
-      : isRemoved
-      ? "grey.200"
-      : isAdded || isModified
-      ? "green.50"
-      : "white";
-
-    const symbol = isLeft
-      ? (isRemoved || isModified ? "-" : "")
-      : (isAdded || isModified ? "+" : "");
-
-    let renderedContent: React.ReactNode = lineContent ?? " ";
-
-    if (isModified) {
-      const diff = diffWordsWithSpace(line.oldLine!, line.newLine!);
-      renderedContent = diff
-        .filter(part => (isLeft ? !part.added : !part.removed))
-        .map((part, i) =>
-          (isLeft && part.removed) || (isRight && part.added) ? (
-            <Box
-              key={i}
-              component={isLeft ? "del" : "ins"}
-              sx={{
-                textDecoration: "unset",
-                borderRadius: spacing(0.25),
-                px: spacing(0.25),
-                backgroundColor: isLeft ? "red.200" : "green.200",
-                display: "inline",
-              }}
-            >
-              {part.value}
-            </Box>
-          ) : (
-            <Box key={i} component="span" sx={{ display: "inline" }}>
-              {part.value}
-            </Box>
-          )
-        );
+  const getRenderedContent = useCallback(() => {
+    if (!isModified) {
+      return lineContent ?? " ";
     }
 
-    return (
-      <TableRow key={idx}>
-        <MinimalTableCell
-          sx={{
-            bgcolor: bgColor,
-            minWidth: spacing(7),
-            position: "sticky",
-            left: 0,
-            textAlign: "right",
-            userSelect: "none",
-          }}
-        >
-          <Typography
-            variant="body1"
-            component="span"
+    const diff = diffWordsWithSpace(line.oldLine!, line.newLine!);
+    return diff
+      .filter(part => (isLeft ? !part.added : !part.removed))
+      .map((part, i) =>
+        (isLeft && part.removed) || (isRight && part.added) ? (
+          <Box
+            key={i}
+            component={isLeft ? "del" : "ins"}
             sx={{
-              color: "grey.500",
-              fontVariantNumeric: "tabular-nums",
+              textDecoration: "unset",
+              borderRadius: spacing(0.25),
+              px: spacing(0.25),
+              backgroundColor: isLeft ? "red.200" : "green.200",
+              display: "inline",
             }}
           >
-            {lineNumber ?? ""}
-          </Typography>
-        </MinimalTableCell>
-        <MinimalTableCell
+            {part.value}
+          </Box>
+        ) : (
+          <Box key={i} component="span" sx={{ display: "inline" }}>
+            {part.value}
+          </Box>
+        )
+      );
+  }, [isLeft, isModified, isRight, line.newLine, line.oldLine, lineContent, spacing]);
+
+  return (
+    <TableRow>
+      <MinimalTableCell
+        sx={{
+          bgcolor: bgColor,
+          minWidth: spacing(7),
+          position: "sticky",
+          left: 0,
+          textAlign: "right",
+          userSelect: "none",
+        }}
+      >
+        <Typography
+          variant="body1"
+          component="span"
           sx={{
-            bgcolor: bgColor,
-            minWidth: spacing(3),
-            textAlign: "center",
-            userSelect: "none",
+            color: "grey.500",
+            fontVariantNumeric: "tabular-nums",
           }}
         >
-          <Typography variant="body1" component="span">
-            {symbol}
-          </Typography>
-        </MinimalTableCell>
-        <MinimalTableCell sx={{ bgcolor: bgColor, width: "100%" }}>
-          <Typography
-            variant="body1"
-            component="span"
-            sx={{ whiteSpace: "pre", userSelect: "text" }}
-          >
-            {renderedContent}
-          </Typography>
-        </MinimalTableCell>
-      </TableRow>
-    );
-  });
+          {lineNumber ?? ""}
+        </Typography>
+      </MinimalTableCell>
+      <MinimalTableCell
+        sx={{
+          bgcolor: bgColor,
+          minWidth: spacing(3),
+          textAlign: "center",
+          userSelect: "none",
+        }}
+      >
+        <Typography variant="body1" component="span">
+          {symbol}
+        </Typography>
+      </MinimalTableCell>
+      <MinimalTableCell sx={{ bgcolor: bgColor, width: "100%" }}>
+        <Typography
+          variant="body1"
+          component="span"
+          sx={{ whiteSpace: "pre", userSelect: "text" }}
+        >
+          {getRenderedContent()}
+        </Typography>
+      </MinimalTableCell>
+    </TableRow>
+  );
 }
