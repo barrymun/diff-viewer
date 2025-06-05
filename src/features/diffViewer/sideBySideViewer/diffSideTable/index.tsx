@@ -17,7 +17,6 @@ export default function DiffSideTable({ side, structuredPatch }: DiffSideTablePr
         <TableBody>
           {structuredPatch.hunks.map((hunk, hunkIndex) => (
             <React.Fragment key={hunkIndex}>
-              <DiffHeader />
               {side === "left" ? <DiffHeader hunk={hunk} /> : <DiffHeader />}
               <DiffSideHunk side={side} hunk={hunk} />
             </React.Fragment>
