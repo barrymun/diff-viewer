@@ -3,7 +3,7 @@ import { Box, Button, Typography, useTheme } from '@mui/material';
 import React, { useState } from 'react';
 import { parsePatch, type StructuredPatch } from 'diff';
 
-import VisuallyHiddenInput from '../styled/visuallyHiddenInput';
+import VisuallyHiddenInput from '../../components/styled/visuallyHiddenInput';
 import SideBySideViewer from './sideBySideViewer';
 import { formatFileChangePath } from '../../utils/helpers';
 

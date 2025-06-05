@@ -1,7 +1,7 @@
 import { Box, TableRow, Typography, useTheme } from "@mui/material";
 import { diffWordsWithSpace } from "diff";
 
-import MinimalTableCell from "../../../styled/minimalTableCell";
+import MinimalTableCell from "../../../../components/styled/minimalTableCell";
 import type { AlignedHunkLine } from "../../../../utils/types";
 import { useCallback, useMemo } from "react";
 import { getLineMetadata } from "../../../../utils/helpers";
