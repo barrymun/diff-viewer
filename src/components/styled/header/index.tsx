@@ -7,21 +7,15 @@ interface HeaderProps extends AppBarProps {
 
 export const Header = styled(AppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
-})<HeaderProps>(({ theme }) => ({
-  transition: theme.transitions.create(['margin', 'width'], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
+})<HeaderProps>(() => ({
+  width: "100%",
+  marginLeft: 0,
   variants: [
     {
       props: ({ open }) => open,
       style: {
         width: `calc(100% - ${drawerWidth}px)`,
         marginLeft: `${drawerWidth}px`,
-        transition: theme.transitions.create(['margin', 'width'], {
-          easing: theme.transitions.easing.easeOut,
-          duration: theme.transitions.duration.enteringScreen,
-        }),
       },
     },
   ],
