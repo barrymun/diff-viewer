@@ -2,9 +2,9 @@ import { Box, TableRow, Typography, useTheme } from "@mui/material";
 import { diffWordsWithSpace } from "diff";
 
 import MinimalTableCell from "../../../../components/styled/minimalTableCell";
-import type { AlignedHunkLine } from "../../../../utils/types";
 import { useCallback, useMemo } from "react";
 import { getLineMetadata } from "../../../../utils/helpers";
+import type { AlignedHunkLine } from "../types";
 
 interface SplitTableRowProps {
   side: "left" | "right";

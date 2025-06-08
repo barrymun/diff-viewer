@@ -4,8 +4,9 @@ import React, { useState } from 'react';
 import { parsePatch, type StructuredPatch } from 'diff';
 
 import VisuallyHiddenInput from '../../components/styled/visuallyHiddenInput';
-import SplitViewer from './splitViewer';
+// import SplitViewer from './splitViewer';
 import { formatFileChangePath } from '../../utils/helpers';
+import { UnifiedViewer } from './unifiedViewer';
 
 export function DiffViewer() {
   const { spacing } = useTheme();
@@ -55,7 +56,8 @@ export function DiffViewer() {
               </Box>
     
               <Box sx={{ minWidth: 0, border: 1, borderColor: "grey.600" }}>
-                <SplitViewer structuredPatch={structuredPatch} />
+                {/* <SplitViewer structuredPatch={structuredPatch} /> */}
+                <UnifiedViewer structuredPatch={structuredPatch} />
               </Box>
             </Box>
           );

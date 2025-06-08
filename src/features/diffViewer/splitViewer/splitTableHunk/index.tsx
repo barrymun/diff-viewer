@@ -1,8 +1,8 @@
 import type { StructuredPatchHunk } from "diff";
 
-import { alignHunkLines } from "../../../../utils/helpers";
 import SplitTableRow from "../splitTableRow";
 import { memo, useMemo } from "react";
+import { alignHunkLines } from "../helpers";
 
 interface DiffSideHunkProps {
   side: "left" | "right";

@@ -2,7 +2,7 @@ import { Box, Table, TableBody } from "@mui/material";
 import type { StructuredPatch } from "diff";
 import React from "react";
 
-import SplitTableHeaderHeader from "../splitTableHeader";
+import DiffTableHeader from "../../common/diffTableHeader";
 import DiffSideHunk from "../splitTableHunk";
 
 interface SplitTableHunkProps {
@@ -17,7 +17,7 @@ export default function SplitTableHunk({ side, structuredPatch }: SplitTableHunk
         <TableBody>
           {structuredPatch.hunks.map((hunk, hunkIndex) => (
             <React.Fragment key={hunkIndex}>
-              {side === "left" ? <SplitTableHeaderHeader hunk={hunk} /> : <SplitTableHeaderHeader />}
+              {side === "left" ? <DiffTableHeader hunk={hunk} /> : <DiffTableHeader />}
               <DiffSideHunk side={side} hunk={hunk} />
             </React.Fragment>
           ))}
