@@ -1,7 +1,7 @@
 import type { StructuredPatchHunk } from "diff";
 
 import { alignHunkLines } from "../../../../utils/helpers";
-import DiffSideRow from "../diffSideRow";
+import SplitTableRow from "../splitTableRow";
 import { memo, useMemo } from "react";
 
 interface DiffSideHunkProps {
@@ -9,7 +9,7 @@ interface DiffSideHunkProps {
   hunk: StructuredPatchHunk;
 }
 
-const MemoizedDiffSideRow = memo(DiffSideRow);
+const MemoizedDiffSideRow = memo(SplitTableRow);
 
 export default function DiffSideHunk({ side, hunk }: DiffSideHunkProps) {
   const alignedLines = useMemo(() => alignHunkLines(hunk), [hunk]);

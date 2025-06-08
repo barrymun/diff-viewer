@@ -4,11 +4,11 @@ import type { StructuredPatchHunk } from "diff";
 import MinimalTableCell from "../../../../components/styled/minimalTableCell";
 import { generateHunkHeader } from "../../../../utils/helpers";
 
-interface HunkHeaderProps {
+interface SplitTableHeaderHeaderProps {
   hunk?: StructuredPatchHunk;
 }
 
-export default function DiffHeader({ hunk }: HunkHeaderProps) {
+export default function SplitTableHeaderHeader({ hunk }: SplitTableHeaderHeaderProps) {
   const { spacing } = useTheme();
   const text = hunk ? generateHunkHeader(hunk) : "";
 

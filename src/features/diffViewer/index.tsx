@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { parsePatch, type StructuredPatch } from 'diff';
 
 import VisuallyHiddenInput from '../../components/styled/visuallyHiddenInput';
-import SideBySideViewer from './sideBySideViewer';
+import SplitViewer from './splitViewer';
 import { formatFileChangePath } from '../../utils/helpers';
 
 export function DiffViewer() {
@@ -55,7 +55,7 @@ export function DiffViewer() {
               </Box>
     
               <Box sx={{ minWidth: 0, border: 1, borderColor: "grey.600" }}>
-                <SideBySideViewer structuredPatch={structuredPatch} />
+                <SplitViewer structuredPatch={structuredPatch} />
               </Box>
             </Box>
           );

@@ -6,12 +6,12 @@ import type { AlignedHunkLine } from "../../../../utils/types";
 import { useCallback, useMemo } from "react";
 import { getLineMetadata } from "../../../../utils/helpers";
 
-interface DiffSideRowProps {
+interface SplitTableRowProps {
   side: "left" | "right";
   line: AlignedHunkLine;
 }
 
-export default function DiffSideRow({ side, line }: DiffSideRowProps) {
+export default function SplitTableRow({ side, line }: SplitTableRowProps) {
   const { spacing } = useTheme();
 
   const isLeft = useMemo(() => side === "left", [side]);
