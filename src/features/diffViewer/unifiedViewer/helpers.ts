@@ -1,17 +1,20 @@
 import type { StructuredPatchHunk } from "diff";
 
-import type { UnifiedDiffLine } from "./types";
+import type { UnifiedDiffLine, UnifiedDiffLineWithDiff } from "./types";
 
-export function processUnifiedHunkLines(hunk: StructuredPatchHunk): UnifiedDiffLine[] {
+export function processUnifiedHunkLinesWithPairing(hunk: StructuredPatchHunk): UnifiedDiffLineWithDiff[] {
   const { lines, oldStart, newStart } = hunk;
   
   let oldLine = oldStart;
   let newLine = newStart;
-  const result: UnifiedDiffLine[] = [];
-
-  for (const line of lines) {
+  const result: UnifiedDiffLineWithDiff[] = [];
+  
+  let i = 0;
+  while (i < lines.length) {
+    const line = lines[i];
+    
     if (line.startsWith(' ')) {
-      // Context line - appears in both old and new
+      // Context line
       const content = line.slice(1);
       result.push({
         type: 'context',
@@ -19,27 +22,68 @@ export function processUnifiedHunkLines(hunk: StructuredPatchHunk): UnifiedDiffL
         oldLineNumber: oldLine++,
         newLineNumber: newLine++,
       });
-    } else if (line.startsWith('-')) {
-      // Removal line - only in old version
-      const content = line.slice(1);
-      result.push({
-        type: 'removal',
-        content,
-        oldLineNumber: oldLine++,
-        newLineNumber: undefined,
-      });
-    } else if (line.startsWith('+')) {
-      // Addition line - only in new version
-      const content = line.slice(1);
-      result.push({
-        type: 'addition',
-        content,
-        oldLineNumber: undefined,
-        newLineNumber: newLine++,
-      });
+      i++;
+    } else if (line.startsWith('-') || line.startsWith('+')) {
+      // Collect consecutive removals and additions
+      const removals: string[] = [];
+      const additions: string[] = [];
+      
+      let j = i;
+      while (j < lines.length && lines[j].startsWith('-')) {
+        removals.push(lines[j].slice(1));
+        j++;
+      }
+      
+      while (j < lines.length && lines[j].startsWith('+')) {
+        additions.push(lines[j].slice(1));
+        j++;
+      }
+      
+      // Create paired lines for word-level diffing
+      const maxLen = Math.max(removals.length, additions.length);
+      for (let k = 0; k < maxLen; k++) {
+        const removal = removals[k];
+        const addition = additions[k];
+        
+        if (removal !== undefined) {
+          const removalLine: UnifiedDiffLineWithDiff = {
+            type: 'removal',
+            content: removal,
+            oldLineNumber: oldLine++,
+            newLineNumber: undefined,
+            pairedLine: addition !== undefined ? {
+              type: 'addition',
+              content: addition,
+              oldLineNumber: undefined,
+              newLineNumber: newLine + k,
+            } : undefined,
+          };
+          result.push(removalLine);
+        }
+        
+        if (addition !== undefined) {
+          const additionLine: UnifiedDiffLineWithDiff = {
+            type: 'addition',
+            content: addition,
+            oldLineNumber: undefined,
+            newLineNumber: newLine++,
+            pairedLine: removal !== undefined ? {
+              type: 'removal',
+              content: removal,
+              oldLineNumber: oldLine - 1,
+              newLineNumber: undefined,
+            } : undefined,
+          };
+          result.push(additionLine);
+        }
+      }
+      
+      i = j;
+    } else {
+      i++;
     }
   }
-
+  
   return result;
 }
 

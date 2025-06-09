@@ -4,3 +4,7 @@ export interface UnifiedDiffLine {
   oldLineNumber?: number;
   newLineNumber?: number;
 }
+
+export interface UnifiedDiffLineWithDiff extends UnifiedDiffLine {
+  pairedLine?: UnifiedDiffLine;
+}

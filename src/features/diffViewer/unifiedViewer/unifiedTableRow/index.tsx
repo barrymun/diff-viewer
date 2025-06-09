@@ -1,9 +1,10 @@
-import { TableRow, Typography, useTheme } from "@mui/material";
-import { useMemo } from "react";
+import { Box, TableRow, Typography, useTheme } from "@mui/material";
+import { useCallback, useMemo } from "react";
 
-import type { UnifiedDiffLine } from "../types";
+import type { UnifiedDiffLine, UnifiedDiffLineWithDiff } from "../types";
 import { getUnifiedLineMetadata } from "../helpers";
 import MinimalTableCell from "../../../../components/styled/minimalTableCell";
+import { diffWordsWithSpace } from "diff";
 
 export interface UnifiedTableRowProps {
   line: UnifiedDiffLine;
@@ -18,6 +19,52 @@ export function UnifiedTableRow({ line }: UnifiedTableRowProps) {
     oldLineNumber,
     newLineNumber,
   } = useMemo(() => getUnifiedLineMetadata(line), [line]);
+
+  const getRenderedContent = useCallback(() => {
+    // For context lines, just return the content
+    if (line.type === 'context') {
+      return line.content || " ";
+    }
+
+    // For lines with paired content (removal/addition), show word-level diff
+    const typedLine = line as UnifiedDiffLineWithDiff;
+    if (typedLine.pairedLine) {
+      const isRemoval = line.type === 'removal';
+      const oldContent = isRemoval ? line.content : typedLine.pairedLine.content;
+      const newContent = isRemoval ? typedLine.pairedLine.content : line.content;
+      
+      const diff = diffWordsWithSpace(oldContent || '', newContent || '');
+      
+      return diff
+        .filter(part => isRemoval ? !part.added : !part.removed)
+        .map((part, i) => {
+          const shouldHighlight = (isRemoval && part.removed) || (!isRemoval && part.added);
+          
+          return shouldHighlight ? (
+            <Box
+              key={i}
+              component={isRemoval ? "del" : "ins"}
+              sx={{
+                textDecoration: "unset",
+                borderRadius: spacing(0.25),
+                px: spacing(0.25),
+                backgroundColor: isRemoval ? "red.200" : "green.200",
+                display: "inline",
+              }}
+            >
+              {part.value}
+            </Box>
+          ) : (
+            <Box key={i} component="span" sx={{ display: "inline" }}>
+              {part.value}
+            </Box>
+          );
+        });
+    }
+
+    // For standalone additions/removals, just return the content
+    return line.content || " ";
+  }, [line, spacing]);
 
   return (
     <TableRow>
@@ -105,7 +152,7 @@ export function UnifiedTableRow({ line }: UnifiedTableRowProps) {
             color: textColor,
           }}
         >
-          {line.content || " "}
+          {getRenderedContent()}
         </Typography>
       </MinimalTableCell>
     </TableRow>
