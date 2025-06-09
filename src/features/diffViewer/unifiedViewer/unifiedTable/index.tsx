@@ -15,7 +15,7 @@ export function UnifiedTable({ structuredPatch }: UnifiedDiffTableProps) {
       <TableBody>
         {structuredPatch.hunks.map((hunk, hunkIndex) => (
           <React.Fragment key={hunkIndex}>
-            <DiffTableHeader hunk={hunk} />
+            <DiffTableHeader hunk={hunk} isUnifiedView />
             <UnifiedTableHunk hunk={hunk} />
           </React.Fragment>
         ))}

@@ -11,11 +11,7 @@ export interface UnifiedTableHunkProps {
 export function UnifiedTableHunk({ hunk }: UnifiedTableHunkProps) {
   const unifiedLines = useMemo(() => processUnifiedHunkLinesWithPairing(hunk), [hunk]);
 
-  return (
-    <>
-      {unifiedLines.map((line, idx) => (
-        <UnifiedTableRow key={idx} line={line} />
-      ))}
-    </>
-  );
+  return unifiedLines.map((line, idx) => (
+    <UnifiedTableRow key={idx} line={line} />
+  ));
 }

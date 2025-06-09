@@ -1,10 +1,10 @@
 import { Box, TableRow, Typography, useTheme } from "@mui/material";
 import { diffWordsWithSpace } from "diff";
+import { useCallback, useMemo } from "react";
 
 import MinimalTableCell from "../../../../components/styled/minimalTableCell";
-import { useCallback, useMemo } from "react";
-import { getLineMetadata } from "../../../../utils/helpers";
 import type { AlignedHunkLine } from "../types";
+import { getSplitLineMetadata } from "../helpers";
 
 interface SplitTableRowProps {
   side: "left" | "right";
@@ -22,7 +22,7 @@ export default function SplitTableRow({ side, line }: SplitTableRowProps) {
     lineContent,
     bgColor,
     symbol,
-  } = useMemo(() => getLineMetadata(line, isLeft), [isLeft, line]);
+  } = useMemo(() => getSplitLineMetadata(line, isLeft), [isLeft, line]);
 
   const getRenderedContent = useCallback(() => {
     if (!isModified) {
@@ -94,7 +94,7 @@ export default function SplitTableRow({ side, line }: SplitTableRowProps) {
         <Typography
           variant="body1"
           component="span"
-          sx={{ whiteSpace: "pre", userSelect: "text" }}
+          sx={{ whiteSpace: "pre", userSelect: "text", px: 1 }}
         >
           {getRenderedContent()}
         </Typography>

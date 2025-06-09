@@ -6,9 +6,10 @@ import { generateHunkHeader } from "../../../../utils/helpers";
 
 interface DiffTableHeaderProps {
   hunk?: StructuredPatchHunk;
+  isUnifiedView?: boolean;
 }
 
-export default function DiffTableHeader({ hunk }: DiffTableHeaderProps) {
+export default function DiffTableHeader({ hunk, isUnifiedView = false }: DiffTableHeaderProps) {
   const { spacing } = useTheme();
   const text = hunk ? generateHunkHeader(hunk) : "";
 
@@ -25,12 +26,25 @@ export default function DiffTableHeader({ hunk }: DiffTableHeaderProps) {
       >
         {"\u00a0"}
       </MinimalTableCell>
+      {isUnifiedView && (
+        <MinimalTableCell
+          sx={{
+            minWidth: spacing(7),
+            position: "sticky",
+            left: 0,
+            textAlign: "right",
+            bgcolor: "grey.50",
+          }}
+        >
+          {"\u00a0"}
+        </MinimalTableCell>
+      )}
       <MinimalTableCell sx={{ minWidth: spacing(3) }} />
       <MinimalTableCell sx={{ width: "100%" }}>
         <Typography
           variant="body1"
           component="span" 
-          sx={{ color: "grey.500" }}
+          sx={{ color: "grey.500", px: 1 }}
         >
           {text || "\u00a0"}
         </Typography>

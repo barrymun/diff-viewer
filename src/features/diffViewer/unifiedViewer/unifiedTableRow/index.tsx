@@ -122,7 +122,7 @@ export function UnifiedTableRow({ line }: UnifiedTableRowProps) {
       <MinimalTableCell
         sx={{
           bgcolor: bgColor,
-          minWidth: spacing(3),
+          minWidth: spacing(4),
           textAlign: "center",
           userSelect: "none",
           borderRight: 1,
@@ -150,6 +150,7 @@ export function UnifiedTableRow({ line }: UnifiedTableRowProps) {
             whiteSpace: "pre", 
             userSelect: "text",
             color: textColor,
+            px: 1,
           }}
         >
           {getRenderedContent()}

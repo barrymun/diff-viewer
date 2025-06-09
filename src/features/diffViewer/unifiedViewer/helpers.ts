@@ -92,7 +92,7 @@ export function getUnifiedLineMetadata(line: UnifiedDiffLine) {
     case 'context':
       return {
         symbol: ' ',
-        bgColor: 'transparent',
+        bgColor: 'white',
         textColor: 'text.primary',
         oldLineNumber: line.oldLineNumber,
         newLineNumber: line.newLineNumber,
@@ -100,7 +100,7 @@ export function getUnifiedLineMetadata(line: UnifiedDiffLine) {
     case 'removal':
       return {
         symbol: '-',
-        bgColor: 'red.50', // or whatever your theme uses for removals
+        bgColor: 'red.50',
         textColor: 'text.primary',
         oldLineNumber: line.oldLineNumber,
         newLineNumber: undefined,
@@ -108,7 +108,7 @@ export function getUnifiedLineMetadata(line: UnifiedDiffLine) {
     case 'addition':
       return {
         symbol: '+',
-        bgColor: 'green.50', // or whatever your theme uses for additions
+        bgColor: 'green.50',
         textColor: 'text.primary',
         oldLineNumber: undefined,
         newLineNumber: line.newLineNumber,
@@ -116,7 +116,7 @@ export function getUnifiedLineMetadata(line: UnifiedDiffLine) {
     default:
       return {
         symbol: ' ',
-        bgColor: 'transparent',
+        bgColor: 'white',
         textColor: 'text.primary',
         oldLineNumber: undefined,
         newLineNumber: undefined,
@@ -124,7 +124,6 @@ export function getUnifiedLineMetadata(line: UnifiedDiffLine) {
   }
 }
 
-// Optional: Enhanced version with word-level diffing for modified lines
 export function processUnifiedHunkLinesWithWordDiff(hunk: StructuredPatchHunk): UnifiedDiffLine[] {
   const { lines, oldStart, newStart } = hunk;
   
