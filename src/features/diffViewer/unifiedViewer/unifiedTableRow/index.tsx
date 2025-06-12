@@ -10,7 +10,7 @@ export interface UnifiedTableRowProps {
   line: UnifiedDiffLine;
 }
 
-export function UnifiedTableRow({ line }: UnifiedTableRowProps) {
+export default function UnifiedTableRow({ line }: UnifiedTableRowProps) {
   const { spacing } = useTheme();
   const {
     symbol,

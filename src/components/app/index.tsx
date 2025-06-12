@@ -3,7 +3,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Box, Drawer, IconButton, Toolbar, Typography, useTheme } from '@mui/material'
 
-import { DiffViewer } from '../../features/diffViewer'
+import DiffViewer from '../../features/diffViewer'
 import { drawerWidth } from '../../utils/constants'
 import { Header } from '../styled/header'
 import { useState } from 'react';

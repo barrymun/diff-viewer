@@ -4,12 +4,14 @@ import React, { useState } from 'react';
 import { parsePatch, type StructuredPatch } from 'diff';
 
 import VisuallyHiddenInput from '../../components/styled/visuallyHiddenInput';
-// import SplitViewer from './splitViewer';
+import SplitViewer from './splitViewer';
+import UnifiedViewer from './unifiedViewer';
 import { formatFileChangePath } from '../../utils/helpers';
-import { UnifiedViewer } from './unifiedViewer';
+import { useDiffView } from '../../hooks/useDiffView';
 
-export function DiffViewer() {
+export default function DiffViewer() {
   const { spacing } = useTheme();
+  const { diffViewType } = useDiffView();
 
   const [parsedDiffs, setParsedDiffs] = useState<StructuredPatch[] | null>(null);
 
@@ -22,26 +24,26 @@ export function DiffViewer() {
     const content = await file.text();
     const parsedPatch = parsePatch(content);
     setParsedDiffs(parsedPatch);
-    // setParsedDiffs(parsedPatch.length > 0 ? [parsedPatch[0]] : []);
   };
 
   return (
-    <>
-      <Button
-        component="label"
-        role={undefined}
-        variant="contained"
-        tabIndex={-1}
-        startIcon={<CloudUploadIcon />}
-      >
-        Upload files
-        <VisuallyHiddenInput
-          type="file"
-          accept=".diff,.patch,.txt"
-          onChange={handleFileUpload}
-          // multiple
-        />
-      </Button>
+    <Box sx={{ display: "grid", gap: spacing(2) }}>
+      <Box>
+        <Button
+          component="label"
+          role={undefined}
+          variant="contained"
+          tabIndex={-1}
+          startIcon={<CloudUploadIcon />}
+        >
+          Upload files
+          <VisuallyHiddenInput
+            type="file"
+            accept=".diff,.patch,.txt"
+            onChange={handleFileUpload}
+          />
+        </Button>
+      </Box>
 
       <Box sx={{ display: "grid", gridTemplateColumns: "1fr", gap: spacing(3), width: "100%" }}>
         {(parsedDiffs ?? []).map((structuredPatch, i) => {
@@ -56,13 +58,13 @@ export function DiffViewer() {
               </Box>
     
               <Box sx={{ minWidth: 0, border: 1, borderColor: "grey.600" }}>
-                {/* <SplitViewer structuredPatch={structuredPatch} /> */}
-                <UnifiedViewer structuredPatch={structuredPatch} />
+                {diffViewType === "split" && <SplitViewer structuredPatch={structuredPatch} />}
+                {diffViewType === 'unified' && <UnifiedViewer structuredPatch={structuredPatch} />}
               </Box>
             </Box>
           );
         })}
       </Box>
-    </>
+    </Box>
   );
 };

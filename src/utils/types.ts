@@ -4,3 +4,5 @@ export interface FormattedPathResult {
   fileChangeType: FileChangeType;
   formattedPath: string;
 }
+
+export type DiffViewType = "unified" | "split";
