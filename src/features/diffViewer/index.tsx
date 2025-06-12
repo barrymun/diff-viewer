@@ -1,5 +1,5 @@
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { Box, Button, Typography, useTheme } from '@mui/material';
+import { Box, Button, ToggleButton, ToggleButtonGroup, Typography, useTheme } from '@mui/material';
 import React, { useState } from 'react';
 import { parsePatch, type StructuredPatch } from 'diff';
 
@@ -11,7 +11,7 @@ import { useDiffView } from '../../hooks/useDiffView';
 
 export default function DiffViewer() {
   const { spacing } = useTheme();
-  const { diffViewType } = useDiffView();
+  const { diffViewType, setDiffViewType } = useDiffView();
 
   const [parsedDiffs, setParsedDiffs] = useState<StructuredPatch[] | null>(null);
 
@@ -26,9 +26,15 @@ export default function DiffViewer() {
     setParsedDiffs(parsedPatch);
   };
 
+  const handleViewChange = (_event: React.MouseEvent<HTMLElement>, newView: typeof diffViewType | null) => {
+    if (newView) {
+      setDiffViewType(newView);
+    }
+  };
+
   return (
     <Box sx={{ display: "grid", gap: spacing(2) }}>
-      <Box>
+      <Box sx={{ display: "flex", alignItems: "center", gap: spacing(1) }}>
         <Button
           component="label"
           role={undefined}
@@ -43,6 +49,20 @@ export default function DiffViewer() {
             onChange={handleFileUpload}
           />
         </Button>
+
+        <ToggleButtonGroup
+          exclusive
+          value={diffViewType}
+          onChange={handleViewChange}
+          aria-label="diff view"
+        >
+          <ToggleButton value="unified" aria-label="unified view">
+            Unified
+          </ToggleButton>
+          <ToggleButton value="split" aria-label="split view">
+            Split
+          </ToggleButton>
+        </ToggleButtonGroup>
       </Box>
 
       <Box sx={{ display: "grid", gridTemplateColumns: "1fr", gap: spacing(3), width: "100%" }}>
