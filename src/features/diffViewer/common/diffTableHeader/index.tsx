@@ -2,7 +2,7 @@ import { TableRow, Typography, useTheme } from "@mui/material";
 import type { StructuredPatchHunk } from "diff";
 
 import MinimalTableCell from "../../../../components/styled/minimalTableCell";
-import { generateHunkHeader } from "../../../../utils/helpers";
+import { generateHunkHeader } from "./helpers";
 
 interface DiffTableHeaderProps {
   hunk?: StructuredPatchHunk;

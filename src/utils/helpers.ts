@@ -1,9 +1,4 @@
-import { type StructuredPatchHunk } from "diff";
 import type { FormattedPathResult } from "./types";
-
-export function generateHunkHeader(hunk: StructuredPatchHunk) {
-  return `@@ -${hunk.oldStart},${hunk.oldLines} +${hunk.newStart},${hunk.newLines} @@`;
-}
 
 export function stripGitPrefix(path: string | null | undefined): string {
   if (!path) return '';
