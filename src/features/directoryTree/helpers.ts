@@ -95,7 +95,8 @@ export function buildDirectoryTree(fileInfos: PatchFileInfo[]): DirectoryTreeIte
       currentPath = currentPath ? `${currentPath}/${part}` : part;
       
       const isFile = i === pathParts.length - 1;
-      const nodeId = currentPath.replace(/[^a-zA-Z0-9/]/g, '_');
+      // const nodeId = currentPath.replace(/[^a-zA-Z0-9/]/g, '_');
+      const nodeId = currentPath; // TODO: check validity
       
       // Check if node already exists
       if (!nodeMap.has(currentPath)) {

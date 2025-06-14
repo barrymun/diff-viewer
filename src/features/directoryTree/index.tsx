@@ -1,18 +1,21 @@
 import { Box, Button, Stack } from "@mui/material";
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { getAllItemsWithChildrenItemIds } from "./helpers";
+import { extractFileInfoFromPatches, getAllItemsWithChildrenItemIds } from "./helpers";
 import { useAppState } from "../../hooks/useAppState";
 
 export default function DirectoryTree() {
-  const { directoryData } = useAppState();
+  const { directoryData, parsedDiffs, setSelectedParsedDiffs } = useAppState();
 
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
-  const handleExpandedItemsChange = (_event: React.SyntheticEvent | null, itemIds: string[]) => {
-    setExpandedItems(itemIds);
-  };
+  const filePatchInfos = useMemo(() => extractFileInfoFromPatches(parsedDiffs ?? []), [parsedDiffs]);
+  const validFilePathsSet = useMemo(() => 
+    new Set(filePatchInfos.map((item) => item.actualFilePath)), 
+    [filePatchInfos]
+  );
 
   const handleExpandClick = useCallback(
     () => {
@@ -23,6 +26,29 @@ export default function DirectoryTree() {
     [directoryData]
   );
 
+  const handleExpandedItemsChange = (_event: React.SyntheticEvent | null, itemIds: string[]) => {
+    setExpandedItems(itemIds);
+  };
+
+  const handleSelectedItemsChange = (_event: React.SyntheticEvent | null, itemIds: string[]) => {
+    const validIds = itemIds.filter((itemId) => validFilePathsSet.has(itemId));
+    if (validIds.length > 0) {
+      setSelectedItems(validIds);
+    }
+  };
+
+  /**
+   * Update the visible patch files based on the selected items.
+   */
+  useEffect(() => {
+    const selectedItemsSet = new Set(selectedItems);
+    const matchingPatches = filePatchInfos
+      .filter(obj => selectedItemsSet.has(obj.actualFilePath))
+      .map(obj => obj.patch);
+
+    setSelectedParsedDiffs(matchingPatches);
+  }, [filePatchInfos, selectedItems, setSelectedParsedDiffs]);
+
   return (
     <Stack spacing={2}>
       <div>
@@ -30,11 +56,14 @@ export default function DirectoryTree() {
           {expandedItems.length === 0 ? 'Expand all' : 'Collapse all'}
         </Button>
       </div>
-      <Box sx={{ minHeight: 352, minWidth: 250 }}>
+      <Box sx={{ minHeight: 350, minWidth: 250 }}>
         <RichTreeView
           items={directoryData}
           expandedItems={expandedItems}
           onExpandedItemsChange={handleExpandedItemsChange}
+          multiSelect
+          selectedItems={selectedItems}
+          onSelectedItemsChange={handleSelectedItemsChange}
         />
       </Box>
     </Stack>
