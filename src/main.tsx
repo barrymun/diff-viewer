@@ -13,15 +13,15 @@ import { CssBaseline, ThemeProvider } from '@mui/material';
 
 import App from './components/app';
 import theme from './theme';
-import { DiffViewProvider } from './contexts/diffViewProvider';
+import { AppStateProvider } from './contexts/stateProvider';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <DiffViewProvider>
+      <AppStateProvider>
         <App />
-      </DiffViewProvider>
+      </AppStateProvider>
     </ThemeProvider>
   </StrictMode>,
 )

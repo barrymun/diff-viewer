@@ -1,19 +1,17 @@
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { Box, Button, ToggleButton, ToggleButtonGroup, Typography, useTheme } from '@mui/material';
-import React, { useState } from 'react';
-import { parsePatch, type StructuredPatch } from 'diff';
+import React from 'react';
+import { parsePatch } from 'diff';
 
 import VisuallyHiddenInput from '../../components/styled/visuallyHiddenInput';
 import SplitViewer from './splitViewer';
 import UnifiedViewer from './unifiedViewer';
 import { formatFileChangePath } from '../../utils/helpers';
-import { useDiffView } from '../../hooks/useDiffView';
+import { useAppState } from '../../hooks/useAppState';
 
 export default function DiffViewer() {
   const { spacing } = useTheme();
-  const { diffViewType, setDiffViewType } = useDiffView();
-
-  const [parsedDiffs, setParsedDiffs] = useState<StructuredPatch[] | null>(null);
+  const { diffViewType, selectedParsedDiffs, setDiffViewType, setParsedDiffs, setSelectedParsedDiffs } = useAppState();
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -24,6 +22,7 @@ export default function DiffViewer() {
     const content = await file.text();
     const parsedPatch = parsePatch(content);
     setParsedDiffs(parsedPatch);
+    setSelectedParsedDiffs(parsedPatch);
   };
 
   const handleViewChange = (_event: React.MouseEvent<HTMLElement>, newView: typeof diffViewType | null) => {
@@ -66,7 +65,7 @@ export default function DiffViewer() {
       </Box>
 
       <Box sx={{ display: "grid", gridTemplateColumns: "1fr", gap: spacing(3), width: "100%" }}>
-        {(parsedDiffs ?? []).map((structuredPatch, i) => {
+        {(selectedParsedDiffs ?? []).map((structuredPatch, i) => {
           const { fileChangeType, formattedPath } = formatFileChangePath(structuredPatch.oldFileName, structuredPatch.newFileName);
 
           return (
