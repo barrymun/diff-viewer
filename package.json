@@ -17,6 +17,7 @@
     "@fontsource/source-code-pro": "^5.2.6",
     "@mui/icons-material": "^7.1.1",
     "@mui/material": "^7.1.1",
+    "@mui/x-tree-view": "^8.5.2",
     "diff": "^8.0.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"

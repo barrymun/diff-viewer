@@ -13,7 +13,7 @@ import { CssBaseline, ThemeProvider } from '@mui/material';
 
 import App from './components/app';
 import theme from './theme';
-import { AppStateProvider } from './contexts/stateProvider';
+import { AppStateProvider } from './contexts/appStateProvider';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

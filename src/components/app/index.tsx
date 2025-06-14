@@ -9,11 +9,12 @@ import { Header } from '../styled/header'
 import { useState } from 'react';
 import { DrawerHeader } from '../styled/drawerHeader';
 import { Main } from '../styled/main';
+import DirectoryTree from '../../features/directoryTree';
 
 export default function App() {
   const { direction } = useTheme();
 
-  const [open, setOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(true);
 
   return (
     <>
@@ -69,6 +70,8 @@ export default function App() {
             {direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton>
         </DrawerHeader>
+
+        <DirectoryTree />
       </Drawer>
     </>
   )

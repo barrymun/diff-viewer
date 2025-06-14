@@ -11,7 +11,7 @@ import { useAppState } from '../../hooks/useAppState';
 
 export default function DiffViewer() {
   const { spacing } = useTheme();
-  const { diffViewType, selectedParsedDiffs, setDiffViewType, setParsedDiffs, setSelectedParsedDiffs } = useAppState();
+  const { diffViewType, selectedParsedDiffs, setDiffViewType, setParsedDiffs } = useAppState();
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -22,7 +22,6 @@ export default function DiffViewer() {
     const content = await file.text();
     const parsedPatch = parsePatch(content);
     setParsedDiffs(parsedPatch);
-    setSelectedParsedDiffs(parsedPatch);
   };
 
   const handleViewChange = (_event: React.MouseEvent<HTMLElement>, newView: typeof diffViewType | null) => {
