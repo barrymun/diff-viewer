@@ -11,10 +11,10 @@ export default function DirectoryTree() {
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
-  const filePatchInfos = useMemo(() => extractFileInfoFromPatches(parsedDiffs ?? []), [parsedDiffs]);
+  const patchFileInfos = useMemo(() => extractFileInfoFromPatches(parsedDiffs ?? []), [parsedDiffs]);
   const validFilePathsSet = useMemo(() => 
-    new Set(filePatchInfos.map((item) => item.actualFilePath)), 
-    [filePatchInfos]
+    new Set(patchFileInfos.map((item) => item.actualFilePath)), 
+    [patchFileInfos]
   );
 
   const handleExpandClick = useCallback(
@@ -30,32 +30,44 @@ export default function DirectoryTree() {
     setExpandedItems(itemIds);
   };
 
-  const handleSelectedItemsChange = (_event: React.SyntheticEvent | null, itemIds: string[]) => {
-    const validIds = itemIds.filter((itemId) => validFilePathsSet.has(itemId));
-    if (validIds.length > 0) {
-      setSelectedItems(validIds);
-    }
-  };
+  const handleSelectedItemsChange = useCallback(
+    (_event: React.SyntheticEvent | null, itemIds: string[]) => {
+      const validIds = itemIds.filter((itemId) => validFilePathsSet.has(itemId));
+      // Don't set the selected items if the user clicks on a directory to be expanded/collapsed.
+      if (validIds.length > 0) {
+        setSelectedItems(validIds);
+      }
+    },
+    [validFilePathsSet]
+  );
 
   /**
    * Update the visible patch files based on the selected items.
    */
   useEffect(() => {
     const selectedItemsSet = new Set(selectedItems);
-    const matchingPatches = filePatchInfos
+    const matchingPatches = patchFileInfos
       .filter(obj => selectedItemsSet.has(obj.actualFilePath))
       .map(obj => obj.patch);
 
     setSelectedParsedDiffs(matchingPatches);
-  }, [filePatchInfos, selectedItems, setSelectedParsedDiffs]);
+  }, [patchFileInfos, selectedItems, setSelectedParsedDiffs]);
+
+  /*
+   * Auto-expand when the directory structure changes.
+   */
+  useEffect(() => {
+    console.log("HERE");
+    setExpandedItems(getAllItemsWithChildrenItemIds(directoryData));
+  }, [directoryData]);
 
   return (
     <Stack spacing={2}>
-      <div>
+      <Box>
         <Button onClick={handleExpandClick}>
           {expandedItems.length === 0 ? 'Expand all' : 'Collapse all'}
         </Button>
-      </div>
+      </Box>
       <Box sx={{ minHeight: 350, minWidth: 250 }}>
         <RichTreeView
           items={directoryData}
