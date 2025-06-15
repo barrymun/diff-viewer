@@ -1,17 +1,17 @@
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { Box, Button, ToggleButton, ToggleButtonGroup, Typography, useTheme } from '@mui/material';
+import { Box, Typography, useTheme } from '@mui/material';
 import React from 'react';
 import { parsePatch } from 'diff';
 
-import VisuallyHiddenInput from '../../components/styled/visuallyHiddenInput';
 import SplitViewer from './splitViewer';
 import UnifiedViewer from './unifiedViewer';
 import { formatFileChangePath } from '../../utils/helpers';
 import { useAppState } from '../../hooks/useAppState';
+import UploadButton from './components/uploadButton';
+import ViewToggle from './components/viewToggle';
 
 export default function DiffViewer() {
   const { spacing } = useTheme();
-  const { diffViewType, selectedParsedDiffs, setDiffViewType, setParsedDiffs } = useAppState();
+  const { diffViewType, selectedParsedDiffs, setParsedDiffs } = useAppState();
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -24,43 +24,12 @@ export default function DiffViewer() {
     setParsedDiffs(parsedPatch);
   };
 
-  const handleViewChange = (_event: React.MouseEvent<HTMLElement>, newView: typeof diffViewType | null) => {
-    if (newView) {
-      setDiffViewType(newView);
-    }
-  };
-
   return (
     <Box sx={{ display: "grid", gap: spacing(2) }}>
       <Box sx={{ display: "flex", alignItems: "center", gap: spacing(1) }}>
-        <Button
-          component="label"
-          role={undefined}
-          variant="contained"
-          tabIndex={-1}
-          startIcon={<CloudUploadIcon />}
-        >
-          Upload files
-          <VisuallyHiddenInput
-            type="file"
-            accept=".diff,.patch,.txt"
-            onChange={handleFileUpload}
-          />
-        </Button>
+        <UploadButton onChange={handleFileUpload} />
 
-        <ToggleButtonGroup
-          exclusive
-          value={diffViewType}
-          onChange={handleViewChange}
-          aria-label="diff view"
-        >
-          <ToggleButton value="unified" aria-label="unified view">
-            Unified
-          </ToggleButton>
-          <ToggleButton value="split" aria-label="split view">
-            Split
-          </ToggleButton>
-        </ToggleButtonGroup>
+        <ViewToggle />
       </Box>
 
       <Box sx={{ display: "grid", gridTemplateColumns: "1fr", gap: spacing(3), width: "100%" }}>
