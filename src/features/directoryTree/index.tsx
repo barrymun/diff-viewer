@@ -1,3 +1,5 @@
+import FolderIcon from '@mui/icons-material/Folder';
+import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import { Box, Button, Stack } from "@mui/material";
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -68,7 +70,7 @@ export default function DirectoryTree() {
           {expandedItems.length === 0 ? 'Expand all' : 'Collapse all'}
         </Button>
       </Box>
-      <Box sx={{ width: "fit-content", overflowX: "auto" }}>
+      <Box sx={{ width: "fit-content", minWidth: "100%", overflowX: "auto" }}>
         <RichTreeView
           items={directoryData}
           expandedItems={expandedItems}
@@ -76,7 +78,11 @@ export default function DirectoryTree() {
           multiSelect
           selectedItems={selectedItems}
           onSelectedItemsChange={handleSelectedItemsChange}
-          slots={{ item: CustomTreeItem }}
+          slots={{
+            item: CustomTreeItem,
+            collapseIcon: FolderOpenIcon,
+            expandIcon: FolderIcon,
+          }}
         />
       </Box>
     </Stack>
