@@ -66,7 +66,7 @@ export default function DirectoryTree() {
   return (
     <Stack spacing={1}>
       <Box>
-        <Button variant="outlined" size="small" onClick={handleExpandClick}>
+        <Button fullWidth variant="outlined" size="small" onClick={handleExpandClick}>
           {expandedItems.length === 0 ? 'Expand all' : 'Collapse all'}
         </Button>
       </Box>

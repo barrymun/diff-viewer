@@ -43,7 +43,7 @@ export default function App() {
               <MenuIcon />
             </IconButton>
 
-            <Typography variant="h4">Diff Viewer (Side-by-Side)</Typography>
+            <Typography variant="h4">Diff Viewer</Typography>
           </Toolbar>
         </Header>
 
