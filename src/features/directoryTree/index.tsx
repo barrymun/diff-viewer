@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { extractFileInfoFromPatches, getAllItemsWithChildrenItemIds } from "./helpers";
 import { useAppState } from "../../hooks/useAppState";
+import { CustomTreeItem } from "../../components/styled/customTreeItem";
 
 export default function DirectoryTree() {
   const { directoryData, parsedDiffs, setSelectedParsedDiffs } = useAppState();
@@ -57,18 +58,17 @@ export default function DirectoryTree() {
    * Auto-expand when the directory structure changes.
    */
   useEffect(() => {
-    console.log("HERE");
     setExpandedItems(getAllItemsWithChildrenItemIds(directoryData));
   }, [directoryData]);
 
   return (
-    <Stack spacing={2}>
+    <Stack spacing={1}>
       <Box>
-        <Button onClick={handleExpandClick}>
+        <Button variant="outlined" size="small" onClick={handleExpandClick}>
           {expandedItems.length === 0 ? 'Expand all' : 'Collapse all'}
         </Button>
       </Box>
-      <Box sx={{ minHeight: 350, minWidth: 250 }}>
+      <Box sx={{ width: "fit-content", overflowX: "auto" }}>
         <RichTreeView
           items={directoryData}
           expandedItems={expandedItems}
@@ -76,6 +76,7 @@ export default function DirectoryTree() {
           multiSelect
           selectedItems={selectedItems}
           onSelectedItemsChange={handleSelectedItemsChange}
+          slots={{ item: CustomTreeItem }}
         />
       </Box>
     </Stack>

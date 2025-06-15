@@ -12,7 +12,7 @@ import { Main } from '../styled/main';
 import DirectoryTree from '../../features/directoryTree';
 
 export default function App() {
-  const { direction } = useTheme();
+  const { direction, spacing } = useTheme();
 
   const [open, setOpen] = useState<boolean>(true);
 
@@ -59,9 +59,11 @@ export default function App() {
         sx={{
           width: drawerWidth,
           flexShrink: 0,
+
           '& .MuiDrawer-paper': {
             width: drawerWidth,
             boxSizing: 'border-box',
+            overflowY: "hidden",
           },
         }}
       >
@@ -71,7 +73,9 @@ export default function App() {
           </IconButton>
         </DrawerHeader>
 
-        <DirectoryTree />
+        <Box sx={{ px: spacing(1), py: spacing(2), overflowY: "auto" }}>
+          <DirectoryTree />
+        </Box>
       </Drawer>
     </>
   )
