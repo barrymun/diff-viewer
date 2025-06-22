@@ -4,7 +4,7 @@
 
 - [x] Error handling for malformed files
 - [x] [Toaster](https://www.npmjs.com/package/react-toastify)
-- [ ] Create a loader to give feedback from the time the user has clicked the upload button to the time the state has actually changed
+- [x] Create a loader to give feedback from the time the user has clicked the upload button to the time the state has actually changed
 - [ ] Update the linter to be more strict
 - [ ] Do not allow relative imports (use only absolute imports with [vite-tsconfig-paths](https://www.npmjs.com/package/vite-tsconfig-paths))
 - [ ] Add prettier (and generate config)

@@ -11,6 +11,7 @@ import { useState } from 'react';
 import { DrawerHeader } from '../styled/drawerHeader';
 import { Main } from '../styled/main';
 import DirectoryTree from '../../features/directoryTree';
+import Loader from '../loader';
 
 export default function App() {
   const { direction, spacing } = useTheme();
@@ -78,6 +79,8 @@ export default function App() {
           <DirectoryTree />
         </Box>
       </Drawer>
+
+      <Loader />
 
       <ToastContainer
         position="bottom-center"
