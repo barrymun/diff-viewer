@@ -2,6 +2,8 @@
 
 ### Dev
 
+- [ ] Error handling for malformed files
+- [ ] [Toaster](https://www.npmjs.com/package/react-toastify)
 - [ ] Update the linter to be more strict
 - [ ] Do not allow relative imports (use only absolute imports with [vite-tsconfig-paths](https://www.npmjs.com/package/vite-tsconfig-paths))
 - [ ] Add prettier (and generate config)
