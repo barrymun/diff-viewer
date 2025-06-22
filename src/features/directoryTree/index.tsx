@@ -1,6 +1,6 @@
 import FolderIcon from '@mui/icons-material/Folder';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
-import { Box, Button, Stack } from "@mui/material";
+import { Box, Button, useTheme } from "@mui/material";
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { useCallback, useEffect, useMemo, useState } from "react";
 
@@ -9,6 +9,7 @@ import { useAppState } from "../../hooks/useAppState";
 import { CustomTreeItem } from "../../components/styled/customTreeItem";
 
 export default function DirectoryTree() {
+  const { spacing } = useTheme();
   const { directoryData, parsedDiffs, setSelectedParsedDiffs } = useAppState();
 
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
@@ -64,13 +65,13 @@ export default function DirectoryTree() {
   }, [directoryData]);
 
   return (
-    <Stack spacing={1}>
+    <Box sx={{ display: "grid", gridTemplateRows: "auto 1fr", gap: spacing(1), height: "100%" }}>
       <Box>
         <Button fullWidth variant="outlined" size="small" onClick={handleExpandClick}>
           {expandedItems.length === 0 ? 'Expand all' : 'Collapse all'}
         </Button>
       </Box>
-      <Box sx={{ width: "fit-content", minWidth: "100%", overflowX: "auto" }}>
+      <Box sx={{ overflow: "auto", minWidth: 0 }}>
         <RichTreeView
           items={directoryData}
           expandedItems={expandedItems}
@@ -83,8 +84,11 @@ export default function DirectoryTree() {
             collapseIcon: FolderOpenIcon,
             expandIcon: FolderIcon,
           }}
+          sx={{
+            minWidth: "fit-content",
+          }}
         />
       </Box>
-    </Stack>
+    </Box>
   );
 }
