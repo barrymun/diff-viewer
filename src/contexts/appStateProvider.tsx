@@ -42,19 +42,15 @@ function AppStateProvider({ children }: AppStateProviderProps) {
    * Reset the selected parsed diffs when the parsed diffs change.
    */
   useEffect(() => {
-    if (parsedDiffs) {
-      setSelectedParsedDiffs(parsedDiffs);
-    }
+    setSelectedParsedDiffs(parsedDiffs);
   }, [parsedDiffs]);
 
   /**
    * Derive the directory structure when the parsed diffs change.
    */
   useEffect(() => {
-    if (parsedDiffs) {
-      const data = convertPatchesToTreeItems(parsedDiffs);
-      setDirectoryData(data);
-    }
+    const data = convertPatchesToTreeItems(parsedDiffs ?? []);
+    setDirectoryData(data);
   }, [parsedDiffs]);
 
   return <AppStateContext.Provider value={value}>{children}</AppStateContext.Provider>;

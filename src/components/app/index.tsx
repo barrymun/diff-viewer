@@ -2,6 +2,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Box, Drawer, IconButton, Toolbar, Typography, useTheme } from '@mui/material'
+import { Bounce, ToastContainer } from 'react-toastify';
 
 import DiffViewer from '../../features/diffViewer'
 import { drawerWidth } from '../../utils/constants'
@@ -77,6 +78,19 @@ export default function App() {
           <DirectoryTree />
         </Box>
       </Drawer>
+
+      <ToastContainer
+        position="bottom-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        pauseOnHover
+        // theme="dark"
+        transition={Bounce}
+      />
     </>
   )
 }
