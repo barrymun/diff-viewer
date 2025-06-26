@@ -1,8 +1,8 @@
+import type { StructuredPatch } from "diff";
 import { createContext, useEffect, useMemo, useState, type Dispatch, type SetStateAction } from "react";
 
-import type { DiffViewType } from "../utils/types";
-import type { StructuredPatch } from "diff";
-import { convertPatchesToTreeItems } from "../features/directoryTree/helpers";
+import { convertPatchesToTreeItems } from "@/features/directoryTree/helpers";
+import type { DiffViewType } from "@/utils/types";
 
 interface AppStateContextProps {
   diffViewType: DiffViewType;
@@ -27,16 +27,19 @@ function AppStateProvider({ children }: AppStateProviderProps) {
   const [selectedParsedDiffs, setSelectedParsedDiffs] = useState<StructuredPatch[] | null>(null);
   const [directoryData, setDirectoryData] = useState<ReturnType<typeof convertPatchesToTreeItems>>([]);
 
-  const value = useMemo(() => ({
-    diffViewType,
-    setDiffViewType,
-    parsedDiffs,
-    setParsedDiffs,
-    selectedParsedDiffs,
-    setSelectedParsedDiffs,
-    directoryData,
-    setDirectoryData,
-  }), [diffViewType, directoryData, parsedDiffs, selectedParsedDiffs]);
+  const value = useMemo(
+    () => ({
+      diffViewType,
+      setDiffViewType,
+      parsedDiffs,
+      setParsedDiffs,
+      selectedParsedDiffs,
+      setSelectedParsedDiffs,
+      directoryData,
+      setDirectoryData,
+    }),
+    [diffViewType, directoryData, parsedDiffs, selectedParsedDiffs]
+  );
 
   /**
    * Reset the selected parsed diffs when the parsed diffs change.

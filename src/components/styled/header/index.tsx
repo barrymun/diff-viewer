@@ -1,12 +1,13 @@
 import { AppBar, styled, type AppBarProps } from "@mui/material";
-import { drawerWidth } from "../../../utils/constants";
+
+import { drawerWidth } from "@/utils/constants";
 
 interface HeaderProps extends AppBarProps {
   open?: boolean;
 }
 
 export const Header = styled(AppBar, {
-  shouldForwardProp: (prop) => prop !== 'open',
+  shouldForwardProp: (prop) => prop !== "open",
 })<HeaderProps>(() => ({
   width: "100%",
   marginLeft: 0,

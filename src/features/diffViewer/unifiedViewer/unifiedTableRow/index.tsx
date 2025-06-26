@@ -1,10 +1,10 @@
 import { Box, TableRow, Typography, useTheme } from "@mui/material";
+import { diffWordsWithSpace } from "diff";
 import { useCallback, useMemo } from "react";
 
-import type { UnifiedDiffLine, UnifiedDiffLineWithDiff } from "../types";
-import { getUnifiedLineMetadata } from "../helpers";
-import MinimalTableCell from "../../../../components/styled/minimalTableCell";
-import { diffWordsWithSpace } from "diff";
+import MinimalTableCell from "@/components/styled/minimalTableCell";
+import { getUnifiedLineMetadata } from "@/features/diffViewer/unifiedViewer/helpers";
+import type { UnifiedDiffLine, UnifiedDiffLineWithDiff } from "@/features/diffViewer/unifiedViewer/types";
 
 export interface UnifiedTableRowProps {
   line: UnifiedDiffLine;
@@ -12,34 +12,31 @@ export interface UnifiedTableRowProps {
 
 export default function UnifiedTableRow({ line }: UnifiedTableRowProps) {
   const { spacing } = useTheme();
-  const {
-    symbol,
-    bgColor,
-    textColor,
-    oldLineNumber,
-    newLineNumber,
-  } = useMemo(() => getUnifiedLineMetadata(line), [line]);
+  const { symbol, bgColor, textColor, oldLineNumber, newLineNumber } = useMemo(
+    () => getUnifiedLineMetadata(line),
+    [line]
+  );
 
   const getRenderedContent = useCallback(() => {
     // For context lines, just return the content
-    if (line.type === 'context') {
+    if (line.type === "context") {
       return line.content || " ";
     }
 
     // For lines with paired content (removal/addition), show word-level diff
     const typedLine = line as UnifiedDiffLineWithDiff;
     if (typedLine.pairedLine) {
-      const isRemoval = line.type === 'removal';
+      const isRemoval = line.type === "removal";
       const oldContent = isRemoval ? line.content : typedLine.pairedLine.content;
       const newContent = isRemoval ? typedLine.pairedLine.content : line.content;
-      
-      const diff = diffWordsWithSpace(oldContent || '', newContent || '');
-      
+
+      const diff = diffWordsWithSpace(oldContent || "", newContent || "");
+
       return diff
-        .filter(part => isRemoval ? !part.added : !part.removed)
+        .filter((part) => (isRemoval ? !part.added : !part.removed))
         .map((part, i) => {
           const shouldHighlight = (isRemoval && part.removed) || (!isRemoval && part.added);
-          
+
           return shouldHighlight ? (
             <Box
               key={i}
@@ -65,6 +62,16 @@ export default function UnifiedTableRow({ line }: UnifiedTableRowProps) {
     // For standalone additions/removals, just return the content
     return line.content || " ";
   }, [line, spacing]);
+
+  const getSymbolColor = () => {
+    if (line.type === "removal") {
+      return "red.600";
+    }
+    if (line.type === "addition") {
+      return "green.600";
+    }
+    return "grey.500";
+  };
 
   return (
     <TableRow>
@@ -92,7 +99,7 @@ export default function UnifiedTableRow({ line }: UnifiedTableRowProps) {
           {oldLineNumber ?? ""}
         </Typography>
       </MinimalTableCell>
-      
+
       {/* New line number column */}
       <MinimalTableCell
         sx={{
@@ -117,7 +124,7 @@ export default function UnifiedTableRow({ line }: UnifiedTableRowProps) {
           {newLineNumber ?? ""}
         </Typography>
       </MinimalTableCell>
-      
+
       {/* Symbol column */}
       <MinimalTableCell
         sx={{
@@ -132,22 +139,22 @@ export default function UnifiedTableRow({ line }: UnifiedTableRowProps) {
         <Typography
           variant="body1"
           component="span"
-          sx={{ 
-            color: line.type === 'removal' ? 'red.600' : line.type === 'addition' ? 'green.600' : 'grey.500',
-            fontWeight: line.type !== 'context' ? 'bold' : 'normal'
+          sx={{
+            color: getSymbolColor(),
+            fontWeight: line.type !== "context" ? "bold" : "normal",
           }}
         >
           {symbol}
         </Typography>
       </MinimalTableCell>
-      
+
       {/* Content column */}
       <MinimalTableCell sx={{ bgcolor: bgColor, width: "100%" }}>
         <Typography
           variant="body1"
           component="span"
-          sx={{ 
-            whiteSpace: "pre", 
+          sx={{
+            whiteSpace: "pre",
             userSelect: "text",
             color: textColor,
             px: 1,

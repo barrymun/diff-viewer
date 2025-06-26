@@ -1,7 +1,8 @@
 import { TableRow, Typography, useTheme } from "@mui/material";
 import type { StructuredPatchHunk } from "diff";
 
-import MinimalTableCell from "../../../../components/styled/minimalTableCell";
+import MinimalTableCell from "@/components/styled/minimalTableCell";
+
 import { generateHunkHeader } from "./helpers";
 
 interface DiffTableHeaderProps {
@@ -41,11 +42,7 @@ export default function DiffTableHeader({ hunk, isUnifiedView = false }: DiffTab
       )}
       <MinimalTableCell sx={{ minWidth: spacing(3) }} />
       <MinimalTableCell sx={{ width: "100%" }}>
-        <Typography
-          variant="body1"
-          component="span" 
-          sx={{ color: "grey.500", px: 1 }}
-        >
+        <Typography variant="body1" component="span" sx={{ color: "grey.500", px: 1 }}>
           {text || "\u00a0"}
         </Typography>
       </MinimalTableCell>

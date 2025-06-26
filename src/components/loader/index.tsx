@@ -1,6 +1,6 @@
 import { Box, LinearProgress } from "@mui/material";
 
-import { useCustomStore } from "../../zustand/store";
+import { useCustomStore } from "@/zustand/store";
 
 export default function Loader() {
   const { isLoading } = useCustomStore();

@@ -1,19 +1,20 @@
-import { createTheme, responsiveFontSizes } from '@mui/material/styles';
-import { customBlue, customGreen, customRed, customYellow } from './customColors';
+import { createTheme, responsiveFontSizes } from "@mui/material/styles";
+
+import { customBlue, customGreen, customRed, customYellow } from "./customColors";
 
 // https://mui.com/material-ui/customization/typography/
 let theme = createTheme({
   typography: {
     fontFamily: [
       '"Source Code Pro"',
-      'Inter',
-      '-apple-system',
-      'BlinkMacSystemFont',
+      "Inter",
+      "-apple-system",
+      "BlinkMacSystemFont",
       '"Segoe UI"',
-      'Roboto',
+      "Roboto",
       '"Helvetica Neue"',
-      'Arial',
-      'sans-serif',
+      "Arial",
+      "sans-serif",
       '"Apple Color Emoji"',
       '"Segoe UI Emoji"',
       '"Segoe UI Symbol"',

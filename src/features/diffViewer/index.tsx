@@ -1,11 +1,12 @@
-import { Box, useTheme } from '@mui/material';
+import { Box, useTheme } from "@mui/material";
 
-import SplitViewer from './splitViewer';
-import UnifiedViewer from './unifiedViewer';
-import { useAppState } from '../../hooks/useAppState';
-import UploadButton from './components/uploadButton';
-import ViewToggle from './components/viewToggle';
-import PatchInfo from './components/patchInfo';
+import { useAppState } from "@/hooks/useAppState";
+
+import PatchInfo from "./components/patchInfo";
+import UploadButton from "./components/uploadButton";
+import ViewToggle from "./components/viewToggle";
+import SplitViewer from "./splitViewer";
+import UnifiedViewer from "./unifiedViewer";
 
 export default function DiffViewer() {
   const { spacing } = useTheme();
@@ -25,14 +26,14 @@ export default function DiffViewer() {
             <Box sx={{ minWidth: 0, display: "flex", alignItems: "center", gap: spacing(1) }}>
               <PatchInfo structuredPatch={structuredPatch} />
             </Box>
-  
+
             <Box sx={{ minWidth: 0, border: 1, borderColor: "grey.600" }}>
               {diffViewType === "split" && <SplitViewer structuredPatch={structuredPatch} />}
-              {diffViewType === 'unified' && <UnifiedViewer structuredPatch={structuredPatch} />}
+              {diffViewType === "unified" && <UnifiedViewer structuredPatch={structuredPatch} />}
             </Box>
           </Box>
         ))}
       </Box>
     </Box>
   );
-};
+}

@@ -1,5 +1,5 @@
 export interface StoreState {
-  isLoading: boolean
-  startLoading: () => void
-  stopLoading: () => void
+  isLoading: boolean;
+  startLoading: () => void;
+  stopLoading: () => void;
 }

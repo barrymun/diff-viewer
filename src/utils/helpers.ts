@@ -1,12 +1,12 @@
 import type { FormattedPathResult } from "./types";
 
 export function stripGitPrefix(path: string | null | undefined): string {
-  if (!path) return '';
-  return path.replace(/^[ab]\//, '');
+  if (!path) return "";
+  return path.replace(/^[ab]\//, "");
 }
 
 export function isDevNull(path: string | null | undefined): boolean {
-  return !path || path === '/dev/null';
+  return !path || path === "/dev/null";
 }
 
 export function formatFileChangePath(
@@ -14,23 +14,23 @@ export function formatFileChangePath(
   to: string | null | undefined
 ): FormattedPathResult {
   if (isDevNull(from) && !isDevNull(to)) {
-    return { fileChangeType: 'added', formattedPath: stripGitPrefix(to) };
+    return { fileChangeType: "added", formattedPath: stripGitPrefix(to) };
   }
 
   if (!isDevNull(from) && isDevNull(to)) {
-    return { fileChangeType: 'deleted', formattedPath: stripGitPrefix(from) };
+    return { fileChangeType: "deleted", formattedPath: stripGitPrefix(from) };
   }
 
   const fromStripped = stripGitPrefix(from);
   const toStripped = stripGitPrefix(to);
 
   if (fromStripped === toStripped) {
-    return { fileChangeType: 'modified', formattedPath: toStripped };
+    return { fileChangeType: "modified", formattedPath: toStripped };
   }
 
   // Renamed — try brace formatting
-  const fromParts = fromStripped.split('/');
-  const toParts = toStripped.split('/');
+  const fromParts = fromStripped.split("/");
+  const toParts = toStripped.split("/");
 
   const len = Math.min(fromParts.length, toParts.length);
 
@@ -45,7 +45,7 @@ export function formatFileChangePath(
 
   if (divergeIndex === -1) {
     // No common path; fallback
-    return { fileChangeType: 'renamed', formattedPath: `${fromStripped} → ${toStripped}` };
+    return { fileChangeType: "renamed", formattedPath: `${fromStripped} → ${toStripped}` };
   }
 
   // Find common suffix
@@ -57,20 +57,16 @@ export function formatFileChangePath(
     suffixIndex++;
   }
 
-  const prefix = fromParts.slice(0, divergeIndex).join('/');
-  const suffix = fromParts.slice(fromParts.length - suffixIndex).join('/');
+  const prefix = fromParts.slice(0, divergeIndex).join("/");
+  const suffix = fromParts.slice(fromParts.length - suffixIndex).join("/");
 
-  const oldMiddle = fromParts.slice(divergeIndex, fromParts.length - suffixIndex).join('/');
-  const newMiddle = toParts.slice(divergeIndex, toParts.length - suffixIndex).join('/');
+  const oldMiddle = fromParts.slice(divergeIndex, fromParts.length - suffixIndex).join("/");
+  const newMiddle = toParts.slice(divergeIndex, toParts.length - suffixIndex).join("/");
 
-  const formattedPath = [
-    prefix,
-    `{${oldMiddle} → ${newMiddle}}`,
-    suffix,
-  ]
+  const formattedPath = [prefix, `{${oldMiddle} → ${newMiddle}}`, suffix]
     .filter(Boolean)
-    .join('/')
-    .replace(/\/\/+/g, '/');
+    .join("/")
+    .replace(/\/\/+/g, "/");
 
-  return { fileChangeType: 'renamed', formattedPath };
+  return { fileChangeType: "renamed", formattedPath };
 }

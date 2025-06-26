@@ -2,9 +2,9 @@ import { Box, TableRow, Typography, useTheme } from "@mui/material";
 import { diffWordsWithSpace } from "diff";
 import { useCallback, useMemo } from "react";
 
-import MinimalTableCell from "../../../../components/styled/minimalTableCell";
-import type { AlignedHunkLine } from "../types";
-import { getSplitLineMetadata } from "../helpers";
+import MinimalTableCell from "@/components/styled/minimalTableCell";
+import { getSplitLineMetadata } from "@/features/diffViewer/splitViewer/helpers";
+import type { AlignedHunkLine } from "@/features/diffViewer/splitViewer/types";
 
 interface SplitTableRowProps {
   side: "left" | "right";
@@ -16,13 +16,10 @@ export default function SplitTableRow({ side, line }: SplitTableRowProps) {
 
   const isLeft = useMemo(() => side === "left", [side]);
   const isRight = useMemo(() => !isLeft, [isLeft]);
-  const {
-    isModified,
-    lineNumber,
-    lineContent,
-    bgColor,
-    symbol,
-  } = useMemo(() => getSplitLineMetadata(line, isLeft), [isLeft, line]);
+  const { isModified, lineNumber, lineContent, bgColor, symbol } = useMemo(
+    () => getSplitLineMetadata(line, isLeft),
+    [isLeft, line]
+  );
 
   const getRenderedContent = useCallback(() => {
     if (!isModified) {
@@ -31,7 +28,7 @@ export default function SplitTableRow({ side, line }: SplitTableRowProps) {
 
     const diff = diffWordsWithSpace(line.oldLine!, line.newLine!);
     return diff
-      .filter(part => (isLeft ? !part.added : !part.removed))
+      .filter((part) => (isLeft ? !part.added : !part.removed))
       .map((part, i) =>
         (isLeft && part.removed) || (isRight && part.added) ? (
           <Box
@@ -91,11 +88,7 @@ export default function SplitTableRow({ side, line }: SplitTableRowProps) {
         </Typography>
       </MinimalTableCell>
       <MinimalTableCell sx={{ bgcolor: bgColor, width: "100%" }}>
-        <Typography
-          variant="body1"
-          component="span"
-          sx={{ whiteSpace: "pre", userSelect: "text", px: 1 }}
-        >
+        <Typography variant="body1" component="span" sx={{ whiteSpace: "pre", userSelect: "text", px: 1 }}>
           {getRenderedContent()}
         </Typography>
       </MinimalTableCell>

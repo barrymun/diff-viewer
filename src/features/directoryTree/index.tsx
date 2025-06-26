@@ -1,12 +1,13 @@
-import FolderIcon from '@mui/icons-material/Folder';
-import FolderOpenIcon from '@mui/icons-material/FolderOpen';
+import FolderIcon from "@mui/icons-material/Folder";
+import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import { Box, Button, useTheme } from "@mui/material";
-import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
+import { RichTreeView } from "@mui/x-tree-view/RichTreeView";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import { CustomTreeItem } from "@/components/styled/customTreeItem";
+import { useAppState } from "@/hooks/useAppState";
+
 import { extractFileInfoFromPatches, getAllItemsWithChildrenItemIds } from "./helpers";
-import { useAppState } from "../../hooks/useAppState";
-import { CustomTreeItem } from "../../components/styled/customTreeItem";
 
 export default function DirectoryTree() {
   const { spacing } = useTheme();
@@ -16,19 +17,11 @@ export default function DirectoryTree() {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
   const patchFileInfos = useMemo(() => extractFileInfoFromPatches(parsedDiffs ?? []), [parsedDiffs]);
-  const validFilePathsSet = useMemo(() => 
-    new Set(patchFileInfos.map((item) => item.actualFilePath)), 
-    [patchFileInfos]
-  );
+  const validFilePathsSet = useMemo(() => new Set(patchFileInfos.map((item) => item.actualFilePath)), [patchFileInfos]);
 
-  const handleExpandClick = useCallback(
-    () => {
-      setExpandedItems((oldExpanded) =>
-        oldExpanded.length === 0 ? getAllItemsWithChildrenItemIds(directoryData) : [],
-      );
-    },
-    [directoryData]
-  );
+  const handleExpandClick = useCallback(() => {
+    setExpandedItems((oldExpanded) => (oldExpanded.length === 0 ? getAllItemsWithChildrenItemIds(directoryData) : []));
+  }, [directoryData]);
 
   const handleExpandedItemsChange = (_event: React.SyntheticEvent | null, itemIds: string[]) => {
     setExpandedItems(itemIds);
@@ -51,8 +44,8 @@ export default function DirectoryTree() {
   useEffect(() => {
     const selectedItemsSet = new Set(selectedItems);
     const matchingPatches = patchFileInfos
-      .filter(obj => selectedItemsSet.has(obj.actualFilePath))
-      .map(obj => obj.patch);
+      .filter((obj) => selectedItemsSet.has(obj.actualFilePath))
+      .map((obj) => obj.patch);
 
     setSelectedParsedDiffs(matchingPatches);
   }, [patchFileInfos, selectedItems, setSelectedParsedDiffs]);
@@ -68,7 +61,7 @@ export default function DirectoryTree() {
     <Box sx={{ display: "grid", gridTemplateRows: "auto 1fr", gap: spacing(1), height: "100%" }}>
       <Box>
         <Button fullWidth variant="outlined" size="small" onClick={handleExpandClick}>
-          {expandedItems.length === 0 ? 'Expand all' : 'Collapse all'}
+          {expandedItems.length === 0 ? "Expand all" : "Collapse all"}
         </Button>
       </Box>
       <Box sx={{ overflow: "auto", minWidth: 0 }}>

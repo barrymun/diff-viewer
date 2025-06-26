@@ -1,17 +1,15 @@
-import { TableCell, type TableCellProps } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { TableCell, type TableCellProps } from "@mui/material";
+import { styled } from "@mui/material/styles";
 
-const MinimalTableCell = styled((props: TableCellProps) => (
-  <TableCell {...props} />
-))(() => ({
-  border: 'none',
+const MinimalTableCell = styled((props: TableCellProps) => <TableCell {...props} />)(() => ({
+  border: "none",
   padding: 0,
   margin: 0,
   lineHeight: 1,
-  '&:last-child': {
+  "&:last-child": {
     paddingRight: 0,
   },
-  '&:first-of-type': {
+  "&:first-of-type": {
     paddingLeft: 0,
   },
 }));

@@ -1,0 +1,4 @@
+pnpm cspell
+pnpm lint
+pnpm test
+pnpm build

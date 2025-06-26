@@ -9,9 +9,9 @@ export function collectContiguousChanges(lines: string[], startIndex: number): [
   let i = startIndex;
   while (i < lines.length) {
     const line = lines[i];
-    if (line.startsWith('-')) {
+    if (line.startsWith("-")) {
       removals.push(line.slice(1));
-    } else if (line.startsWith('+')) {
+    } else if (line.startsWith("+")) {
       additions.push(line.slice(1));
     } else {
       break;
@@ -34,7 +34,7 @@ export function alignHunkLines(hunk: StructuredPatchHunk): AlignedHunkLine[] {
   while (i < lines.length) {
     const line = lines[i];
 
-    if (line.startsWith(' ')) {
+    if (line.startsWith(" ")) {
       const text = line.slice(1);
       result.push({
         oldLineNumber: oldLine++,
@@ -71,22 +71,32 @@ export function getSplitLineMetadata(line: AlignedHunkLine, isLeft: boolean) {
   const lineNumber = isLeft ? line.oldLineNumber : line.newLineNumber;
   const lineContent = isLeft ? line.oldLine : line.newLine;
 
-  const bgColor = isLeft
-    ? isAdded
-      ? "grey.200"
-      : isRemoved || isModified
-      ? "red.50"
-      : "white"
-    : isRemoved
-    ? "grey.200"
-    : isAdded || isModified
-    ? "green.50"
-    : "white";
+  let bgColor: string;
+  if (isLeft) {
+    if (isAdded) {
+      bgColor = "grey.200";
+    } else if (isRemoved || isModified) {
+      bgColor = "red.50";
+    } else {
+      bgColor = "white";
+    }
+  } else {
+    if (isRemoved) {
+      bgColor = "grey.200";
+    } else if (isAdded || isModified) {
+      bgColor = "green.50";
+    } else {
+      bgColor = "white";
+    }
+  }
 
-  const symbol = isLeft
-    ? (isRemoved || isModified ? "-" : "")
-    : (isAdded || isModified ? "+" : "");
-  
+  let symbol: string;
+  if (isLeft) {
+    symbol = isRemoved || isModified ? "-" : "";
+  } else {
+    symbol = isAdded || isModified ? "+" : "";
+  }
+
   return {
     isAdded,
     isRemoved,

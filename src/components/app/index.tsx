@@ -1,17 +1,17 @@
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import MenuIcon from '@mui/icons-material/Menu';
-import { Box, Drawer, IconButton, Toolbar, Typography, useTheme } from '@mui/material'
-import { Bounce, ToastContainer } from 'react-toastify';
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import MenuIcon from "@mui/icons-material/Menu";
+import { Box, Drawer, IconButton, Toolbar, Typography, useTheme } from "@mui/material";
+import { useState } from "react";
+import { Bounce, ToastContainer } from "react-toastify";
 
-import DiffViewer from '../../features/diffViewer'
-import { drawerWidth } from '../../utils/constants'
-import { Header } from '../styled/header'
-import { useState } from 'react';
-import { DrawerHeader } from '../styled/drawerHeader';
-import { Main } from '../styled/main';
-import DirectoryTree from '../../features/directoryTree';
-import Loader from '../loader';
+import Loader from "@/components/loader";
+import { DrawerHeader } from "@/components/styled/drawerHeader";
+import { Header } from "@/components/styled/header";
+import { Main } from "@/components/styled/main";
+import DiffViewer from "@/features/diffViewer";
+import DirectoryTree from "@/features/directoryTree";
+import { drawerWidth } from "@/utils/constants";
 
 export default function App() {
   const { direction, spacing } = useTheme();
@@ -39,7 +39,7 @@ export default function App() {
                 {
                   mr: 2,
                 },
-                open && { display: 'none' },
+                open && { display: "none" },
               ]}
             >
               <MenuIcon />
@@ -54,24 +54,24 @@ export default function App() {
         </Main>
       </Box>
 
-      <Drawer 
+      <Drawer
         open={open}
-        variant="persistent" 
-        anchor="left" 
+        variant="persistent"
+        anchor="left"
         sx={{
           width: drawerWidth,
           flexShrink: 0,
 
-          '& .MuiDrawer-paper': {
+          "& .MuiDrawer-paper": {
             width: drawerWidth,
-            boxSizing: 'border-box',
+            boxSizing: "border-box",
             overflowY: "hidden",
           },
         }}
       >
         <DrawerHeader>
           <IconButton onClick={() => setOpen(false)}>
-            {direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+            {direction === "ltr" ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton>
         </DrawerHeader>
 
@@ -95,5 +95,5 @@ export default function App() {
         transition={Bounce}
       />
     </>
-  )
+  );
 }

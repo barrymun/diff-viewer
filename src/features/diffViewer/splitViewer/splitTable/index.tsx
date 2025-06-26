@@ -2,8 +2,8 @@ import { Box, Table, TableBody } from "@mui/material";
 import type { StructuredPatch } from "diff";
 import React from "react";
 
-import DiffTableHeader from "../../common/diffTableHeader";
-import DiffSideHunk from "../splitTableHunk";
+import DiffTableHeader from "@/features/diffViewer/common/diffTableHeader";
+import DiffSideHunk from "@/features/diffViewer/splitViewer/splitTableHunk";
 
 interface SplitTableHunkProps {
   side: "left" | "right";
