@@ -10,8 +10,8 @@
 - [x] Add prettier (and generate config)
 - [x] Add cspell spell checker
 - [x] Add husky pre-commit hooks
+- [x] Code chunking for improved performance
 - [ ] Construct more resilient unit tests
-- [ ] Code chunking for improved performance
 - [ ] i18n translations
 - [ ] Light/Dark mode
 
