@@ -11,12 +11,15 @@
 - [x] Add cspell spell checker
 - [x] Add husky pre-commit hooks
 - [x] Code chunking for improved performance
+- [ ] Use checkboxes in the directory tree to indicate which files are shown in the main section
 - [ ] Construct more resilient unit tests
 - [ ] i18n translations
 - [ ] Light/Dark mode
+- [ ] Make use of the `getTreeStatistics` function
 
 ### Product
 
 - [ ] Make the size of the sidebar adjustable (by dragging it?)
 - [ ] Make the file names sticky as the user scrolls down when examining the diffs
 - [ ] Update the `FileChangeType` status next to the file names to have their own colours
+- [ ] Make some optimisations for mobile viewers

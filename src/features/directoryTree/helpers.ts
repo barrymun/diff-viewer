@@ -19,6 +19,26 @@ export function getAllItemsWithChildrenItemIds(items: TreeViewBaseItem[]) {
 }
 
 /**
+ * Get all file nodes from a tree structure (excluding directories).
+ */
+export function getAllFileNodes(items: DirectoryTreeItem[]): DirectoryTreeItem[] {
+  const fileNodes: DirectoryTreeItem[] = [];
+
+  const traverse = (node: DirectoryTreeItem) => {
+    if (node.type === "file") {
+      fileNodes.push(node);
+    }
+
+    if (node.children) {
+      node.children.forEach(traverse);
+    }
+  };
+
+  items.forEach(traverse);
+  return fileNodes;
+}
+
+/**
  * Extract file information from StructuredPatch array
  */
 export function extractFileInfoFromPatches(patches: StructuredPatch[]): PatchFileInfo[] {

@@ -31,9 +31,6 @@ export default function UploadButton() {
     }
   };
 
-  /**
-   *
-   */
   useEffect(() => {
     stopLoading();
   }, [parsedDiffs, stopLoading]);

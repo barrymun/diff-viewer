@@ -7,7 +7,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { CustomTreeItem } from "@/components/styled/customTreeItem";
 import { useAppState } from "@/hooks/useAppState";
 
-import { extractFileInfoFromPatches, getAllItemsWithChildrenItemIds } from "./helpers";
+import { extractFileInfoFromPatches, getAllFileNodes, getAllItemsWithChildrenItemIds } from "./helpers";
 
 export default function DirectoryTree() {
   const { spacing } = useTheme();
@@ -17,7 +17,6 @@ export default function DirectoryTree() {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
   const patchFileInfos = useMemo(() => extractFileInfoFromPatches(parsedDiffs ?? []), [parsedDiffs]);
-  const validFilePathsSet = useMemo(() => new Set(patchFileInfos.map((item) => item.actualFilePath)), [patchFileInfos]);
 
   const handleExpandClick = useCallback(() => {
     setExpandedItems((oldExpanded) => (oldExpanded.length === 0 ? getAllItemsWithChildrenItemIds(directoryData) : []));
@@ -27,16 +26,9 @@ export default function DirectoryTree() {
     setExpandedItems(itemIds);
   };
 
-  const handleSelectedItemsChange = useCallback(
-    (_event: React.SyntheticEvent | null, itemIds: string[]) => {
-      const validIds = itemIds.filter((itemId) => validFilePathsSet.has(itemId));
-      // Don't set the selected items if the user clicks on a directory to be expanded/collapsed.
-      if (validIds.length > 0) {
-        setSelectedItems(validIds);
-      }
-    },
-    [validFilePathsSet]
-  );
+  const handleSelectedItemsChange = (_event: React.SyntheticEvent | null, itemIds: string[]) => {
+    setSelectedItems(itemIds);
+  };
 
   /**
    * Update the visible patch files based on the selected items.
@@ -51,10 +43,13 @@ export default function DirectoryTree() {
   }, [patchFileInfos, selectedItems, setSelectedParsedDiffs]);
 
   /*
-   * Auto-expand when the directory structure changes.
+   * When the directory structure changes:
+   *  - Auto-expand all files.
+   *  - Auto-select all files.
    */
   useEffect(() => {
     setExpandedItems(getAllItemsWithChildrenItemIds(directoryData));
+    setSelectedItems(getAllFileNodes(directoryData).map((item) => item.id));
   }, [directoryData]);
 
   return (
@@ -66,6 +61,7 @@ export default function DirectoryTree() {
       </Box>
       <Box sx={{ overflow: "auto", minWidth: 0 }}>
         <RichTreeView
+          checkboxSelection
           items={directoryData}
           expandedItems={expandedItems}
           onExpandedItemsChange={handleExpandedItemsChange}
