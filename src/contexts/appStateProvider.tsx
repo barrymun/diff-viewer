@@ -42,13 +42,6 @@ function AppStateProvider({ children }: AppStateProviderProps) {
   );
 
   /**
-   * Reset the selected parsed diffs when the parsed diffs change.
-   */
-  useEffect(() => {
-    setSelectedParsedDiffs(parsedDiffs);
-  }, [parsedDiffs]);
-
-  /**
    * Derive the directory structure when the parsed diffs change.
    */
   useEffect(() => {
