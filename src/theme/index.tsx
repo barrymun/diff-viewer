@@ -3,11 +3,13 @@ import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 import { customBlue, customGreen, customRed, customYellow } from "./customColors";
 
 // https://mui.com/material-ui/customization/typography/
-let theme = createTheme({
+let theme = createTheme({});
+
+theme = createTheme({
   typography: {
     fontFamily: [
       '"Source Code Pro"',
-      "Inter",
+      // "Inter",
       "-apple-system",
       "BlinkMacSystemFont",
       '"Segoe UI"',
@@ -27,6 +29,17 @@ let theme = createTheme({
     yellow: customYellow,
   },
   components: {
+    // Add global font size scaling for mobile
+    MuiCssBaseline: {
+      styleOverrides: {
+        html: {
+          fontSize: 16, // Desktop
+          [theme.breakpoints.down("sm")]: {
+            fontSize: 13, // Mobile
+          },
+        },
+      },
+    },
     MuiTable: {
       styleOverrides: {
         root: {

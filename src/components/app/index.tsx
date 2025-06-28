@@ -1,7 +1,7 @@
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Box, Drawer, IconButton, Toolbar, Typography, useTheme } from "@mui/material";
+import { Box, Drawer, IconButton, Toolbar, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useState } from "react";
 import { Bounce, ToastContainer } from "react-toastify";
 
@@ -14,9 +14,10 @@ import DirectoryTree from "@/features/directoryTree";
 import { drawerWidth } from "@/utils/constants";
 
 export default function App() {
-  const { direction, spacing } = useTheme();
+  const { breakpoints, direction, spacing } = useTheme();
+  const isMobile = useMediaQuery(breakpoints.down("sm"));
 
-  const [open, setOpen] = useState<boolean>(true);
+  const [open, setOpen] = useState<boolean>(!isMobile);
 
   return (
     <>
@@ -59,11 +60,17 @@ export default function App() {
         variant="persistent"
         anchor="left"
         sx={{
-          width: drawerWidth,
+          width: {
+            xs: "100%",
+            sm: drawerWidth,
+          },
           flexShrink: 0,
 
           "& .MuiDrawer-paper": {
-            width: drawerWidth,
+            width: {
+              xs: "100%",
+              sm: drawerWidth,
+            },
             boxSizing: "border-box",
             overflowY: "hidden",
           },

@@ -18,7 +18,10 @@ export default function DiffTableHeader({ hunk, isUnifiedView = false }: DiffTab
     <TableRow sx={{ bgcolor: "grey.50", userSelect: "none" }}>
       <MinimalTableCell
         sx={{
-          minWidth: spacing(7),
+          minWidth: {
+            xs: spacing(6),
+            sm: spacing(7),
+          },
           position: "sticky",
           left: 0,
           textAlign: "right",
@@ -30,7 +33,10 @@ export default function DiffTableHeader({ hunk, isUnifiedView = false }: DiffTab
       {isUnifiedView && (
         <MinimalTableCell
           sx={{
-            minWidth: spacing(7),
+            minWidth: {
+              xs: spacing(6),
+              sm: spacing(7),
+            },
             position: "sticky",
             left: 0,
             textAlign: "right",

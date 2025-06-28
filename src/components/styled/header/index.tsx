@@ -8,15 +8,17 @@ interface HeaderProps extends AppBarProps {
 
 export const Header = styled(AppBar, {
   shouldForwardProp: (prop) => prop !== "open",
-})<HeaderProps>(() => ({
+})<HeaderProps>(({ theme }) => ({
   width: "100%",
   marginLeft: 0,
   variants: [
     {
       props: ({ open }) => open,
       style: {
-        width: `calc(100% - ${drawerWidth}px)`,
-        marginLeft: `${drawerWidth}px`,
+        [theme.breakpoints.up("sm")]: {
+          width: `calc(100% - ${drawerWidth}px)`,
+          marginLeft: `${drawerWidth}px`,
+        },
       },
     },
   ],

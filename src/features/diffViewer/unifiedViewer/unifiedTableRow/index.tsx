@@ -79,7 +79,10 @@ export default function UnifiedTableRow({ line }: UnifiedTableRowProps) {
       <MinimalTableCell
         sx={{
           bgcolor: bgColor,
-          minWidth: spacing(7),
+          minWidth: {
+            xs: spacing(6),
+            sm: spacing(7),
+          },
           position: "sticky",
           left: 0,
           textAlign: "right",
@@ -104,9 +107,15 @@ export default function UnifiedTableRow({ line }: UnifiedTableRowProps) {
       <MinimalTableCell
         sx={{
           bgcolor: bgColor,
-          minWidth: spacing(7),
           position: "sticky",
-          left: spacing(7),
+          minWidth: {
+            xs: spacing(6),
+            sm: spacing(7),
+          },
+          left: {
+            xs: spacing(6),
+            sm: spacing(7),
+          },
           textAlign: "right",
           userSelect: "none",
           borderRight: 1,

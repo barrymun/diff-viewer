@@ -57,7 +57,10 @@ export default function SplitTableRow({ side, line }: SplitTableRowProps) {
       <MinimalTableCell
         sx={{
           bgcolor: bgColor,
-          minWidth: spacing(7),
+          minWidth: {
+            xs: spacing(6),
+            sm: spacing(7),
+          },
           position: "sticky",
           left: 0,
           textAlign: "right",
