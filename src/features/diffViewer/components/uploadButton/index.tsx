@@ -14,12 +14,12 @@ export default function UploadButton() {
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
-      startLoading();
       const file = e.target.files?.[0];
       if (!file) {
         return;
       }
 
+      startLoading();
       const content = await file.text();
       const parsedPatch = parsePatch(content);
       setParsedDiffs(parsedPatch);
